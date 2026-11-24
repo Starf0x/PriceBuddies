@@ -1,6 +1,6 @@
 # PriceBuddy (Starf0x fork) — v0.0.50
 
-> Private copy of [chahel1817/PriceBuddy](https://github.com/chahel1817/PriceBuddy) (upstream has **no license**: personal use only, do not publish).
+> Copy of [chahel1817/PriceBuddy](https://github.com/chahel1817/PriceBuddy) (upstream has **no license**; kept public by owner's choice, 2026-11-24).
 
 ## Status / resume notes
 - **Last updated:** 2026-11-24 14:45 UTC
