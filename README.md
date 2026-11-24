@@ -3,7 +3,7 @@
 > Copy of [chahel1817/PriceBuddy](https://github.com/chahel1817/PriceBuddy) (upstream has **no license**; kept public by owner's choice, 2026-11-24).
 
 ## Status / resume notes
-- **Last updated:** 2026-11-24 15:20 UTC
+- **Last updated:** 2026-11-24 15:55 UTC
 - **Versioning:** starts at 0.0.50, +3 per release (0.0.53, 0.0.56 … up to 0.0.98, then 0.1.0).
 - **v0.0.50 — better shop search** (`backend/search.js`):
   - Sources: Amazon (SerpApi, `amazon.nl`), Google Shopping NL via SerpApi (covers bol.com, Coolblue, MediaMarkt…), eBay Browse API (`EBAY_NL`), bol.com Marketing Catalog API (optional, needs partner key; not yet tested against the live API).
@@ -21,6 +21,13 @@
   - `POST /api/scrape-preview {url}`; pasting a shop link in the search box shows that product.
   - Used by `scrapePriceByUrl` (server) and `sync_prices.js`; also as fallback when the eBay/Amazon selectors fail.
   - joybuy.nl could not be tested live from the cloud (blocked there); browser fallback is tested against a local fake challenge page.
+- **v0.0.53 — Unraid Docker**:
+  - `Dockerfile`: one container = Next.js (port 3000, standalone) + Express (internal 5001) + Chromium. Browser calls `/backend/*`, Next rewrites to Express (see `frontend/next.config.mjs`, only when `DOCKER_BUILD=1`).
+  - `docker/start.js` runs `docker/init-db.js` (waits for DB, creates tables from `backend/schema.sql`) then both servers.
+  - Database is external MySQL/MariaDB (Unraid: MariaDB app). `docker-compose.yml` includes MariaDB for non-Unraid use.
+  - `unraid/pricebuddy.xml`: Unraid template (image `ghcr.io/starf0x/pricebuddies:latest`).
+  - `.github/workflows/docker.yml`: builds + pushes the image to ghcr.io when a GitHub release is published (or run manually). After the first push, set the ghcr package to **public** so Unraid can pull without login.
+  - Tested in the cloud: image builds, DB init, pages, register/login via `/backend`, healthcheck. Chromium install inside the image could not be tested there (Debian mirror blocked); test build skipped it.
 - **Not changed yet:** tracked-product prices/alerts/sync still use INR (`server.js`, `sync_prices.js`); no auth tokens on API routes (anyone can pass any user id) — next candidates.
 - Config: copy `backend/.env.example` to `backend/.env`.
 

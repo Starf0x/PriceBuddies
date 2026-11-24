@@ -1,0 +1,24 @@
+# Local / non-Unraid use:  docker compose up -d   → http://localhost:3000
+services:
+  pricebuddy:
+    build: .
+    image: ghcr.io/starf0x/pricebuddies:latest
+    ports: ["3000:3000"]
+    env_file: [{ path: backend/.env, required: false }]
+    environment:
+      DB_HOST: db
+      DB_USER: pricebuddy
+      DB_PASSWORD: pricebuddy
+      DB_NAME: pricebuddy
+    shm_size: 512mb
+    depends_on: [db]
+    restart: unless-stopped
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: pricebuddy-root
+      MARIADB_DATABASE: pricebuddy
+      MARIADB_USER: pricebuddy
+      MARIADB_PASSWORD: pricebuddy
+    volumes: ["./data/mysql:/var/lib/mysql"]
+    restart: unless-stopped
