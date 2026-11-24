@@ -145,6 +145,10 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
     const [category, setCategory] = useState('All');
     const [addedCount, setAddedCount] = useState(0);
     const [activeHint, setActiveHint] = useState(null);
+    const [sort, setSort] = useState('relevance');
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [failedSources, setFailedSources] = useState([]);
 
     const inputRef = useRef(null);
 
@@ -153,7 +157,17 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
     }, [isOpen]);
 
     // Filter by selected category
-    const filteredResults = category === 'All' ? results : results;   // server-side category TBD; for now show all
+    // Client-side price filter + sort (the server caches the raw results, so no extra API calls)
+    const filteredResults = (() => {
+        const lo = parseFloat(minPrice), hi = parseFloat(maxPrice);
+        let list = results.filter(r =>
+            (!Number.isFinite(lo) || (r.priceValue != null && r.priceValue >= lo)) &&
+            (!Number.isFinite(hi) || (r.priceValue != null && r.priceValue <= hi)));
+        const byPrice = dir => (a, b) => (a.priceValue == null) - (b.priceValue == null) || dir * (a.priceValue - b.priceValue);
+        if (sort === 'price_asc') list = [...list].sort(byPrice(1));
+        if (sort === 'price_desc') list = [...list].sort(byPrice(-1));
+        return list;
+    })();
 
     const handleSearch = async (e, overrideQuery) => {
         e?.preventDefault();
@@ -168,6 +182,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
             const data = await res.json();
             if (data.success) {
                 setResults(data.data || []);
+                setFailedSources(Object.entries(data.sources || {}).filter(([, v]) => !v.ok).map(([k, v]) => `${k}: ${v.error}`));
                 setSearched(true);
                 if (!data.data?.length) setSearchError('No products found. Try a different keyword.');
             } else {
@@ -282,7 +297,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
                                 <input
                                     ref={inputRef}
                                     type="text"
-                                    placeholder="Search Amazon & eBay — iPhone 15, RTX 4090, AirPods Pro..."
+                                    placeholder="Search Amazon, eBay, bol.com & more — iPhone 15, RTX 4090, AirPods Pro..."
                                     className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-white placeholder:text-gray-700 font-medium focus:outline-none sm:px-0 sm:py-3.5 sm:pr-3"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
@@ -355,7 +370,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
                                         <div key={i} className="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
                                     ))}
                                 </div>
-                                <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Scanning Amazon & eBay live listings...</span>
+                                <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Scanning shops for live listings...</span>
                             </div>
                             <div className="grid grid-cols-1 min-[430px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                                 {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
@@ -387,6 +402,11 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
                         </div>
                     )}
 
+                    {/* Shops that failed (missing key, quota, outage) */}
+                    {!searching && searched && failedSources.length > 0 && (
+                        <p className="text-[10px] text-amber-400/70 mb-2">Not searched: {failedSources.join(' · ')}</p>
+                    )}
+
                     {/* Results Grid */}
                     {!searching && searched && filteredResults.length > 0 && (
                         <div>
@@ -395,6 +415,15 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
                                 <p className="text-[11px] font-black text-gray-600 uppercase tracking-widest">
                                     <span className="text-brand-cyan">{filteredResults.length}</span> listings found for <span className="text-gray-300">"{query}"</span>
                                 </p>
+                                <div className="flex items-center gap-2 text-[11px]">
+                                    <select value={sort} onChange={e => setSort(e.target.value)} className="bg-white/[0.03] border border-white/10 rounded-lg px-2 py-1 text-gray-300">
+                                        <option value="relevance">Best match</option>
+                                        <option value="price_asc">Price: low → high</option>
+                                        <option value="price_desc">Price: high → low</option>
+                                    </select>
+                                    <input type="number" min="0" placeholder="Min" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="w-16 bg-white/[0.03] border border-white/10 rounded-lg px-2 py-1 text-gray-300" />
+                                    <input type="number" min="0" placeholder="Max" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="w-16 bg-white/[0.03] border border-white/10 rounded-lg px-2 py-1 text-gray-300" />
+                                </div>
                                 {addedCount > 0 && (
                                     <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
                                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
