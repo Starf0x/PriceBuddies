@@ -121,15 +121,20 @@ async function scrapeAmazonPrice(url) {
     }
 
     // Fallback to HTML scrape
-    const genericPrice = await scrapeGeneric(url);
-    if (genericPrice) {
-        return { price: genericPrice, isInr: hostname.endsWith('.in') };
-    }
+    const generic = await scrapeGeneric(url);
+    if (generic) return generic;
     return null;
 }
 
 
+// Non-eBay/Amazon shops use the shared generic scraper (returns INR for this tracker)
+const scraper = require('./scraper');
 async function scrapeGeneric(url) {
+    if (!/ebay\./i.test(url)) {
+        const p = await scraper.scrapeProduct(url);
+        const inr = p ? await scraper.convert(p.price, p.currency, 'INR') : null;
+        return inr ? { price: inr, isInr: true } : null;
+    }
     try {
         const { data } = await fetchHtml(url);
         const $ = cheerio.load(data);
@@ -142,7 +147,7 @@ async function scrapeGeneric(url) {
             $('[itemprop="price"]').attr('content');
         if (!priceText) return null;
         const cleanPrice = priceText.replace(/[^\d.]/g, '');
-        return cleanPrice ? parseFloat(cleanPrice) : null;
+        return cleanPrice ? { price: parseFloat(cleanPrice), isInr: false } : null;
     } catch (e) {
         console.error("Scrape error for", url, e.message);
         return null;
@@ -152,10 +157,8 @@ async function scrapeGeneric(url) {
 async function scrapeByUrl(url) {
     const host = getHostname(url) || '';
     if (host.includes('amazon.')) return scrapeAmazonPrice(url);
-    const genericPrice = await scrapeGeneric(url);
-    if (genericPrice) {
-        return { price: genericPrice, isInr: host.endsWith('.in') };
-    }
+    const generic = await scrapeGeneric(url);
+    if (generic) return generic;
     return null;
 }
 

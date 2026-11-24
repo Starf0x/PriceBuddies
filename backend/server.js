@@ -9,6 +9,7 @@ const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 
 dotenv.config();
+const scraper = require('./scraper');
 
 // Handle process-level errors to prevent crashes
 process.on('unhandledRejection', (reason, promise) => {
@@ -447,9 +448,15 @@ async function scrapePriceByUrl(url) {
         result = ebayPrice ? { price: ebayPrice, isInr: false } : null;
     } else if (hostname.includes('amazon.')) {
         result = await scrapeAmazonPrice(url);
-    } else {
-        const genericPrice = await scrapeEbayPrice(url);
-        result = genericPrice ? { price: genericPrice, isInr: isLocalStore } : null;
+    }
+    if (!result || !result.price) {
+        // Any other shop (or eBay/Amazon selectors failed): JSON-LD / meta / embedded JSON,
+        // with headless-browser fallback (scraper.js)
+        const p = await scraper.scrapeProduct(url);
+        if (!p) return null;
+        const inr = await scraper.convert(p.price, p.currency, 'INR');
+        console.log(`🛒 ${hostname}: ${p.currency} ${p.price} → ₹${inr} (${p.method}, ${p.via})`);
+        return inr;
     }
 
     if (!result || !result.price) return null;
@@ -651,6 +658,21 @@ app.patch('/api/products/:id/target-price', async (req, res) => {
 //  PRODUCT SEARCH  —  see search.js (Amazon, Google Shopping, eBay, bol.com)
 // ─────────────────────────────────────────────────────────────────────────────
 const productSearch = require('./search');
+
+// Preview a pasted product URL: name, price, image (any shop)
+app.post('/api/scrape-preview', async (req, res) => {
+    const { url } = req.body || {};
+    if (!url || !/^https?:\/\//i.test(url)) return res.status(400).json({ success: false, message: 'A full http(s) URL is required.' });
+    try {
+        const p = await scraper.scrapeProduct(url);
+        if (!p) return res.status(422).json({ success: false, message: 'Could not read a price from this page (the shop may block automated visits).' });
+        const priceText = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: p.currency }).format(p.price);
+        res.json({ success: true, data: { id: `url-${Date.now()}`, name: p.name, price: priceText, priceValue: p.price, currency: p.currency,
+            image: p.image, url, store: (getHostname(url) || 'Shop').replace(/^www\./, ''), storeLogo: null, method: p.method, via: p.via } });
+    } catch (e) {
+        res.status(500).json({ success: false, message: e.message });
+    }
+});
 
 app.get(['/search', '/api/search'], async (req, res) => {
     const { q, sort, min, max, stores } = req.query;
