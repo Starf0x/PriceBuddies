@@ -1,9 +1,9 @@
-# PriceBuddy (Starf0x fork) — v0.0.50
+# PriceBuddy (Starf0x fork) — v0.0.53
 
 > Copy of [chahel1817/PriceBuddy](https://github.com/chahel1817/PriceBuddy) (upstream has **no license**; kept public by owner's choice, 2026-11-24).
 
 ## Status / resume notes
-- **Last updated:** 2026-11-24 14:45 UTC
+- **Last updated:** 2026-11-24 15:20 UTC
 - **Versioning:** starts at 0.0.50, +3 per release (0.0.53, 0.0.56 … up to 0.0.98, then 0.1.0).
 - **v0.0.50 — better shop search** (`backend/search.js`):
   - Sources: Amazon (SerpApi, `amazon.nl`), Google Shopping NL via SerpApi (covers bol.com, Coolblue, MediaMarkt…), eBay Browse API (`EBAY_NL`), bol.com Marketing Catalog API (optional, needs partner key; not yet tested against the live API).
@@ -12,7 +12,15 @@
   - `/search?q=&sort=relevance|price_asc|price_desc&min=&max=&stores=` ; response `sources` shows per-shop ok/error.
   - 60-min in-memory cache per query (saves SerpApi quota); duplicates removed by URL.
   - Frontend search modal: sort + min/max filter, shows which shops failed.
-  - Tests: `cd backend && npm test` (no network, axios stubbed).
+  - Tests: `cd backend && npm test` (no network, axios stubbed). Browser test only runs with `PUPPETEER_EXECUTABLE_PATH` set.
+- **v0.0.53 — better product-page scraping** (`backend/scraper.js`):
+  - Works for any shop: JSON-LD → microdata → og/product meta → embedded app JSON (`__NEXT_DATA__`, `__INITIAL_STATE__`…) → visible price text.
+  - Correct EU price parsing (`€ 1.299,95`); old code turned `€ 12,99` into 1299.
+  - Bot-check pages (e.g. joybuy.nl "Risk Control", Cloudflare) are detected; then retried with headless Chrome (puppeteer, `SCRAPE_BROWSER`).
+  - Currency taken from the page and converted correctly (old code treated every non-.in shop as USD).
+  - `POST /api/scrape-preview {url}`; pasting a shop link in the search box shows that product.
+  - Used by `scrapePriceByUrl` (server) and `sync_prices.js`; also as fallback when the eBay/Amazon selectors fail.
+  - joybuy.nl could not be tested live from the cloud (blocked there); browser fallback is tested against a local fake challenge page.
 - **Not changed yet:** tracked-product prices/alerts/sync still use INR (`server.js`, `sync_prices.js`); no auth tokens on API routes (anyone can pass any user id) — next candidates.
 - Config: copy `backend/.env.example` to `backend/.env`.
 

@@ -178,8 +178,13 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
         setResults([]);
         setSearched(false);
         try {
-            const res = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(q)}`);
+            // A pasted product link is scraped directly (any shop); anything else is a keyword search
+            const isUrl = /^https?:\/\//i.test(q);
+            const res = isUrl
+                ? await fetch(`${API_BASE_URL}/api/scrape-preview`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: q }) })
+                : await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(q)}`);
             const data = await res.json();
+            if (data.success && isUrl) data.data = [data.data];
             if (data.success) {
                 setResults(data.data || []);
                 setFailedSources(Object.entries(data.sources || {}).filter(([, v]) => !v.ok).map(([k, v]) => `${k}: ${v.error}`));
@@ -297,7 +302,7 @@ export default function AddProductModal({ isOpen, onClose, onSuccess }) {
                                 <input
                                     ref={inputRef}
                                     type="text"
-                                    placeholder="Search Amazon, eBay, bol.com & more — iPhone 15, RTX 4090, AirPods Pro..."
+                                    placeholder="Search a product or paste a shop link — iPhone 15, RTX 4090, AirPods Pro..."
                                     className="min-w-0 flex-1 bg-transparent px-2 py-2 text-sm text-white placeholder:text-gray-700 font-medium focus:outline-none sm:px-0 sm:py-3.5 sm:pr-3"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
