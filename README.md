@@ -1,3 +1,23 @@
+# PriceBuddy (Starf0x fork) — v0.0.50
+
+> Private copy of [chahel1817/PriceBuddy](https://github.com/chahel1817/PriceBuddy) (upstream has **no license**: personal use only, do not publish).
+
+## Status / resume notes
+- **Last updated:** 2026-11-24 14:45 UTC
+- **Versioning:** starts at 0.0.50, +3 per release (0.0.53, 0.0.56 … up to 0.0.98, then 0.1.0).
+- **v0.0.50 — better shop search** (`backend/search.js`):
+  - Sources: Amazon (SerpApi, `amazon.nl`), Google Shopping NL via SerpApi (covers bol.com, Coolblue, MediaMarkt…), eBay Browse API (`EBAY_NL`), bol.com Marketing Catalog API (optional, needs partner key; not yet tested against the live API).
+  - Removed the eBay Finding API (shut down by eBay in 2025).
+  - Prices as numbers (`priceValue`) in `SEARCH_CURRENCY` (default EUR), converted via open.er-api.com.
+  - `/search?q=&sort=relevance|price_asc|price_desc&min=&max=&stores=` ; response `sources` shows per-shop ok/error.
+  - 60-min in-memory cache per query (saves SerpApi quota); duplicates removed by URL.
+  - Frontend search modal: sort + min/max filter, shows which shops failed.
+  - Tests: `cd backend && npm test` (no network, axios stubbed).
+- **Not changed yet:** tracked-product prices/alerts/sync still use INR (`server.js`, `sync_prices.js`); no auth tokens on API routes (anyone can pass any user id) — next candidates.
+- Config: copy `backend/.env.example` to `backend/.env`.
+
+---
+
 # PriceBuddy 💹
 
 **PriceBuddy** is a smart price tracking and comparison platform designed to help users save money by monitoring product prices across popular e-commerce platforms like **Amazon** and **eBay**.
