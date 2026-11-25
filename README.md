@@ -22,7 +22,8 @@
   - `unraid/`: templates for PriceBuddies and the optional scraper.
   - CI publishes to ghcr.io instead of Docker Hub.
 - **Tested (cloud, 2026-11-25):** upstream image + new start script with SQLite on an empty bind mount: migrations, admin user, login, Settings save, product create page.
-- **Next:** Dutch store presets (bol.com, Coolblue, joybuy.nl…) and check joybuy.nl scraping.
+- **v0.0.65:** auto-create store retries through the scraper container (`SCRAPER_BASE_URL`, quick 2s reachability check) when a plain HTTP request finds no title/price (bot-protected shops such as joybuy.nl); the new store then uses the scraper. Detection runs once per request (was twice), and the error explains that the scraper is needed. Code: `app/Services/AutoCreateStore.php`, `app/Rules/StoreUrl.php`.
+- **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---
 
