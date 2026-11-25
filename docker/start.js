@@ -1,4 +1,5 @@
-// Container entrypoint: prepare the database, then run backend + frontend; stop the container if either exits.
+// Container entrypoint: run backend + frontend; stop the container if either exits.
+// Data lives in SQLite at SQLITE_PATH (default /data/pricebuddies.db; mount /data as a volume).
 const { spawn } = require('node:child_process');
 const path = require('node:path');
 
@@ -8,11 +9,8 @@ const run = (name, args, env = {}) => {
     return p;
 };
 
-(async () => {
-    await require('./init-db').initDb();
-    const children = [
-        run('backend', [path.join(__dirname, '../backend/server.js')]),
-        run('frontend', [path.join(__dirname, '../frontend/server.js')], { PORT: process.env.WEB_PORT || '3000', HOSTNAME: '0.0.0.0' }),
-    ];
-    for (const sig of ['SIGTERM', 'SIGINT']) process.on(sig, () => { children.forEach(c => c.kill(sig)); setTimeout(() => process.exit(0), 3000); });
-})().catch((e) => { console.error('[start] failed:', e.message); process.exit(1); });
+const children = [
+    run('backend', [path.join(__dirname, '../backend/server.js')]),
+    run('frontend', [path.join(__dirname, '../frontend/server.js')], { PORT: process.env.WEB_PORT || '3000', HOSTNAME: '0.0.0.0' }),
+];
+for (const sig of ['SIGTERM', 'SIGINT']) process.on(sig, () => { children.forEach(c => c.kill(sig)); setTimeout(() => process.exit(0), 3000); });

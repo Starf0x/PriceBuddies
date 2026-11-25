@@ -81,7 +81,7 @@ export default function OnboardingModal({ isOpen, onClose }) {
 
                     <div className="flex items-center justify-center gap-2 mb-2">
                         <Sparkles className="w-4 h-4 text-brand-cyan" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-cyan">Welcome to PriceBuddy</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-cyan">Welcome to PriceBuddies</span>
                     </div>
 
                     <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-3">

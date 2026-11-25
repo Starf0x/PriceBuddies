@@ -38,7 +38,7 @@ export default function Sidebar() {
             {/* Branding */}
             <div className="p-8 flex items-center gap-0">
                 <div className="flex items-center justify-center translate-y-[-1px]">
-                    <img src="/logo.png" alt="PriceBuddy Icon" className="w-10 h-10 object-contain" />
+                    <img src="/logo.png" alt="PriceBuddies Icon" className="w-10 h-10 object-contain" />
                 </div>
                 <span className="text-xl font-extrabold tracking-tighter text-white uppercase translate-x-[-3px]">
                     Price<span className="text-brand-cyan">Buddy</span>

@@ -137,6 +137,16 @@ function getPoolConfig() {
     };
 }
 
+// SQLite (default, v0.0.56): used unless a MySQL connection is configured, or when DB_CLIENT=sqlite.
+// File location: SQLITE_PATH (Docker: /data/pricebuddies.db).
+const wantsMysql = process.env.DB_CLIENT === 'mysql' ||
+    (process.env.DB_CLIENT !== 'sqlite' && Boolean(getConnectionUriFromEnv() || process.env.DB_HOST || process.env.MYSQLHOST));
+if (!wantsMysql) {
+    const file = process.env.SQLITE_PATH || path.join(__dirname, 'data', 'pricebuddies.db');
+    module.exports = require('./sqlite').createPool(file);
+    return;
+}
+
 const pool = mysql.createPool(getPoolConfig());
 
 // Test connection

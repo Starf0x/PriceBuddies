@@ -3,7 +3,7 @@ import "./globals.css";
 import ClientWrapper from "@/components/ClientWrapper";
 
 export const metadata = {
-  title: "PriceBuddy | Global Price Intelligence",
+  title: "PriceBuddies | Global Price Intelligence",
   description: "Monitor, track and analyze product prices globally.",
 };
 

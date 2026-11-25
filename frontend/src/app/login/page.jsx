@@ -75,7 +75,7 @@ export default function LoginPage() {
                 {/* Logo / Branding */}
                 <div className="text-center space-y-2">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-card border border-brand-border rounded-2xl mb-4 group hover:border-brand-cyan/30 transition-all duration-500 shadow-2xl">
-                        <img src="/logo.png" alt="PriceBuddy" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-500" />
+                        <img src="/logo.png" alt="PriceBuddies" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-500" />
                     </div>
                     <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tighter uppercase leading-none">
                         Welcome <span className="text-brand-cyan">Back</span>

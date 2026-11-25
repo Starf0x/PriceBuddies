@@ -51,3 +51,9 @@ server_tmp.txt
 
 # Database
 *.sqlite
+
+# SQLite data
+backend/data/
+*.db
+*.db-wal
+*.db-shm

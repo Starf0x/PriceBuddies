@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<!-- Unraid template for PriceBuddy. Copy to /boot/config/plugins/dockerMan/templates-user/my-PriceBuddy.xml
+<!-- Unraid template for PriceBuddies. Copy to /boot/config/plugins/dockerMan/templates-user/my-PriceBuddies.xml
      (or paste the raw GitHub URL of this file under Docker > Template repositories). -->
 <Container version="2">
-  <Name>PriceBuddy</Name>
+  <Name>PriceBuddies</Name>
   <Repository>ghcr.io/starf0x/pricebuddies:latest</Repository>
   <Registry>https://github.com/Starf0x/PriceBuddies/pkgs/container/pricebuddies</Registry>
   <Network>bridge</Network>
@@ -10,17 +10,13 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/Starf0x/PriceBuddies/issues</Support>
   <Project>https://github.com/Starf0x/PriceBuddies</Project>
-  <Overview>Price tracker and comparison for Dutch shops (Amazon.nl, eBay.nl, Google Shopping NL, bol.com and any shop link). Needs a MySQL/MariaDB database, e.g. the MariaDB app from Community Applications; tables are created automatically.</Overview>
+  <Overview>Price tracker and comparison for Dutch shops (Amazon.nl, eBay.nl, Google Shopping NL, bol.com and any shop link). Fork of PriceBuddy (github.com/chahel1817/PriceBuddy). No separate database needed: data is stored in SQLite under /data.</Overview>
   <Category>Tools: Productivity:</Category>
   <WebUI>http://[IP]:[PORT:3000]/</WebUI>
   <Icon>https://raw.githubusercontent.com/Starf0x/PriceBuddies/main/frontend/public/logo.png</Icon>
   <ExtraParams>--shm-size=512m</ExtraParams>
   <Config Name="Web UI port" Target="3000" Default="3000" Mode="tcp" Description="Port for the web interface" Type="Port" Display="always" Required="true" Mask="false">3000</Config>
-  <Config Name="Database host" Target="DB_HOST" Default="" Description="IP/hostname of your MySQL/MariaDB server (e.g. your Unraid IP)" Type="Variable" Display="always" Required="true" Mask="false"></Config>
-  <Config Name="Database port" Target="DB_PORT" Default="3306" Description="" Type="Variable" Display="always" Required="true" Mask="false">3306</Config>
-  <Config Name="Database user" Target="DB_USER" Default="pricebuddy" Description="" Type="Variable" Display="always" Required="true" Mask="false">pricebuddy</Config>
-  <Config Name="Database password" Target="DB_PASSWORD" Default="" Description="" Type="Variable" Display="always" Required="true" Mask="true"></Config>
-  <Config Name="Database name" Target="DB_NAME" Default="pricebuddy" Description="Created automatically if the user is allowed to" Type="Variable" Display="always" Required="true" Mask="false">pricebuddy</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/pricebuddies" Mode="rw" Description="SQLite database (pricebuddies.db)" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/pricebuddies</Config>
   <Config Name="SerpApi key" Target="SERPAPI_KEY" Default="" Description="Optional: Amazon.nl + Google Shopping search (serpapi.com, 250 free/month)" Type="Variable" Display="always" Required="false" Mask="true"></Config>
   <Config Name="eBay App ID" Target="EBAY_APP_ID" Default="" Description="Optional: eBay search (developer.ebay.com)" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
   <Config Name="eBay Cert ID" Target="EBAY_CERT_ID" Default="" Description="" Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
