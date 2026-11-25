@@ -1,4 +1,4 @@
-# PriceBuddies — v0.0.56
+# PriceBuddies — v0.0.59
 
 > **PriceBuddies is a fork of [PriceBuddy](https://github.com/chahel1817/PriceBuddy) by chahel1817.**
 > Upstream has **no license**; this copy is kept public by the owner's choice (2026-11-24).
@@ -10,7 +10,7 @@
 3. Open `http://<unraid-ip>:3000` and create an account. No separate database needed (SQLite).
 
 ## Status / resume notes
-- **Last updated:** 2026-11-25 09:05 (Europe/Amsterdam)
+- **Last updated:** 2026-11-25 09:30 (Europe/Amsterdam)
 - **Versioning:** starts at 0.0.50, +3 per release (0.0.53, 0.0.56 … up to 0.0.98, then 0.1.0).
 - **v0.0.50 — better shop search** (`backend/search.js`):
   - Sources: Amazon (SerpApi, `amazon.nl`), Google Shopping NL via SerpApi (covers bol.com, Coolblue, MediaMarkt…), eBay Browse API (`EBAY_NL`), bol.com Marketing Catalog API (optional, needs partner key; not yet tested against the live API).
@@ -40,6 +40,7 @@
   - Docker: `DB_CLIENT=sqlite`, `SQLITE_PATH=/data/pricebuddies.db`, `VOLUME /data`; MariaDB removed from compose and the Unraid template (now a `/data` path).
   - UI/name: PriceBuddy → PriceBuddies.
   - Tests: `sqlite.test.js` (results, transactions, cascade, dates).
+- **v0.0.59 — working Settings page**: the old page was a non-functional mock-up. Now: edit name/e-mail (`PATCH /api/users/:id`), change password (`POST /api/users/:id/password`, needs current password), price-drop e-mail toggle; `GET /api/users/:id` returns profile + counts. Logo text PriceBuddies. API keys stay in the Unraid template / env.
 - **Not changed yet:** tracked-product prices/alerts/sync still use INR (`server.js`, `sync_prices.js`); no auth tokens on API routes (anyone can pass any user id) — next candidates.
 - Config: copy `backend/.env.example` to `backend/.env`.
 

@@ -41,7 +41,7 @@ export default function Sidebar() {
                     <img src="/logo.png" alt="PriceBuddies Icon" className="w-10 h-10 object-contain" />
                 </div>
                 <span className="text-xl font-extrabold tracking-tighter text-white uppercase translate-x-[-3px]">
-                    Price<span className="text-brand-cyan">Buddy</span>
+                    Price<span className="text-brand-cyan">Buddies</span>
                 </span>
             </div>
 

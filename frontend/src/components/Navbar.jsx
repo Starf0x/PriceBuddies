@@ -10,7 +10,7 @@ export default function Navbar() {
             <Link href="/dashboard" className="flex min-w-0 items-center gap-2 group md:hidden">
                 <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
                 <span className="truncate text-sm font-black uppercase tracking-tight text-white">
-                    Price<span className="text-brand-cyan">Buddy</span>
+                    Price<span className="text-brand-cyan">Buddies</span>
                 </span>
             </Link>
             <div className="flex-1 max-w-xl">

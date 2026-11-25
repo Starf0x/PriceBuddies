@@ -978,13 +978,56 @@ app.patch('/api/users/:id/notifications', async (req, res) => {
     }
 });
 
+// Update profile (name, e-mail) — v0.0.59
+app.patch('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    const name = String(req.body?.name || '').trim();
+    const email = normalizeEmail(req.body?.email);
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ success: false, message: 'Enter a name and a valid e-mail address.' });
+    }
+    try {
+        const [taken] = await pool.query('SELECT id FROM users WHERE email = ? AND id != ? LIMIT 1', [email, id]);
+        if (taken.length) return res.status(409).json({ success: false, message: 'This e-mail address is already in use.' });
+        const [r] = await pool.query('UPDATE users SET name = ?, email = ? WHERE id = ?', [name, email, id]);
+        if (!r.affectedRows) return res.status(404).json({ success: false, message: 'User not found' });
+        const [[user]] = await pool.query('SELECT id, name, email, notifications_active FROM users WHERE id = ?', [id]);
+        res.json({ success: true, message: 'Profile saved.', user });
+    } catch (e) {
+        res.status(500).json({ success: false, message: e.message });
+    }
+});
+
+// Change password (requires the current one) — v0.0.59
+app.post('/api/users/:id/password', async (req, res) => {
+    const { id } = req.params;
+    const { current, next } = req.body || {};
+    if (!current || !next || String(next).length < 8) {
+        return res.status(400).json({ success: false, message: 'The new password must be at least 8 characters.' });
+    }
+    try {
+        const [[user]] = await pool.query('SELECT password FROM users WHERE id = ?', [id]);
+        if (!user || !(await bcrypt.compare(current, user.password))) {
+            return res.status(403).json({ success: false, message: 'Current password is incorrect.' });
+        }
+        await pool.query('UPDATE users SET password = ? WHERE id = ?', [await bcrypt.hash(next, 10), id]);
+        res.json({ success: true, message: 'Password changed.' });
+    } catch (e) {
+        res.status(500).json({ success: false, message: e.message });
+    }
+});
+
 // Sync user profile state
 app.get('/api/users/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const [users] = await pool.query('SELECT notifications_active FROM users WHERE id = ?', [id]);
+        const [users] = await pool.query('SELECT id, name, email, notifications_active, created_at FROM users WHERE id = ?', [id]);
         if (users.length > 0) {
-            res.json({ success: true, notifications_active: users[0].notifications_active });
+            const [[counts]] = await pool.query(
+                `SELECT COUNT(DISTINCT p.id) AS products, COUNT(s.target_price) AS alerts
+                 FROM products p LEFT JOIN product_sources s ON s.product_id = p.id WHERE p.user_id = ?`, [id]);
+            res.json({ success: true, notifications_active: users[0].notifications_active, user: users[0],
+                stats: { products: Number(counts.products) || 0, alerts: Number(counts.alerts) || 0 } });
         } else {
             res.status(404).json({ success: false, message: 'User not found' });
         }
