@@ -99,7 +99,7 @@ app.use((req, res, next) => {
 
 // Basic Route
 app.get('/', (req, res) => {
-    res.json({ message: "PriceBuddy API V2 is running on port " + PORT });
+    res.json({ message: "PriceBuddies API V2 is running on port " + PORT });
 });
 
 // Test DB Route
@@ -926,7 +926,7 @@ async function runPriceSync(targetUserId = null, forceSync = false) {
                     const themeColor = store === 'Amazon' ? '#FF9900' : '#00E5FF';
 
                     await transporter.sendMail({
-                        from: `"PriceBuddy ${store} Alerts" <${process.env.EMAIL_USER}>`,
+                        from: `"PriceBuddies ${store} Alerts" <${process.env.EMAIL_USER}>`,
                         to: row.user_email,
                         subject: `📉 ${store} PRICE DROP: ${row.name}`,
                         html: `<div style="padding: 20px; font-family: sans-serif;">

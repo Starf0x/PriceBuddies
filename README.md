@@ -1,9 +1,16 @@
-# PriceBuddy (Starf0x fork) — v0.0.53
+# PriceBuddies — v0.0.56
 
-> Copy of [chahel1817/PriceBuddy](https://github.com/chahel1817/PriceBuddy) (upstream has **no license**; kept public by owner's choice, 2026-11-24).
+> **PriceBuddies is a fork of [PriceBuddy](https://github.com/chahel1817/PriceBuddy) by chahel1817.**
+> Upstream has **no license**; this copy is kept public by the owner's choice (2026-11-24).
+
+## Install on Unraid
+1. Unraid terminal:
+   `wget -O /boot/config/plugins/dockerMan/templates-user/my-PriceBuddies.xml https://raw.githubusercontent.com/Starf0x/PriceBuddies/main/unraid/pricebuddies.xml`
+2. **Docker → Add Container → Template: PriceBuddies**. Keep **Data** = `/mnt/user/appdata/pricebuddies`; optionally add API keys (SerpApi, eBay, bol.com, e-mail). **Apply**.
+3. Open `http://<unraid-ip>:3000` and create an account. No separate database needed (SQLite).
 
 ## Status / resume notes
-- **Last updated:** 2026-11-24 15:55 UTC
+- **Last updated:** 2026-11-25 09:05 (Europe/Amsterdam)
 - **Versioning:** starts at 0.0.50, +3 per release (0.0.53, 0.0.56 … up to 0.0.98, then 0.1.0).
 - **v0.0.50 — better shop search** (`backend/search.js`):
   - Sources: Amazon (SerpApi, `amazon.nl`), Google Shopping NL via SerpApi (covers bol.com, Coolblue, MediaMarkt…), eBay Browse API (`EBAY_NL`), bol.com Marketing Catalog API (optional, needs partner key; not yet tested against the live API).
@@ -23,11 +30,16 @@
   - joybuy.nl could not be tested live from the cloud (blocked there); browser fallback is tested against a local fake challenge page.
 - **v0.0.53 — Unraid Docker**:
   - `Dockerfile`: one container = Next.js (port 3000, standalone) + Express (internal 5001) + Chromium. Browser calls `/backend/*`, Next rewrites to Express (see `frontend/next.config.mjs`, only when `DOCKER_BUILD=1`).
-  - `docker/start.js` runs `docker/init-db.js` (waits for DB, creates tables from `backend/schema.sql`) then both servers.
-  - Database is external MySQL/MariaDB (Unraid: MariaDB app). `docker-compose.yml` includes MariaDB for non-Unraid use.
-  - `unraid/pricebuddy.xml`: Unraid template (image `ghcr.io/starf0x/pricebuddies:latest`).
+  - `docker/start.js` starts both servers.
+  - `unraid/pricebuddies.xml`: Unraid template (image `ghcr.io/starf0x/pricebuddies:latest`).
   - `.github/workflows/docker.yml`: builds + pushes the image to ghcr.io when a GitHub release is published (or run manually). After the first push, set the ghcr package to **public** so Unraid can pull without login.
   - Tested in the cloud: image builds, DB init, pages, register/login via `/backend`, healthcheck. Chromium install inside the image could not be tested there (Debian mirror blocked); test build skipped it.
+- **v0.0.56 — renamed to PriceBuddies + SQLite**:
+  - `backend/sqlite.js`: SQLite via Node's built-in `node:sqlite`, same interface as the mysql2 pool (`query`, `getConnection`, transactions), tables created automatically. Write transactions are serialized.
+  - `backend/db.js`: SQLite by default (`SQLITE_PATH`, default `backend/data/pricebuddies.db`); MySQL only when `DB_CLIENT=mysql` or `DB_HOST`/`MYSQL_URL` is set.
+  - Docker: `DB_CLIENT=sqlite`, `SQLITE_PATH=/data/pricebuddies.db`, `VOLUME /data`; MariaDB removed from compose and the Unraid template (now a `/data` path).
+  - UI/name: PriceBuddy → PriceBuddies.
+  - Tests: `sqlite.test.js` (results, transactions, cascade, dates).
 - **Not changed yet:** tracked-product prices/alerts/sync still use INR (`server.js`, `sync_prices.js`); no auth tokens on API routes (anyone can pass any user id) — next candidates.
 - Config: copy `backend/.env.example` to `backend/.env`.
 

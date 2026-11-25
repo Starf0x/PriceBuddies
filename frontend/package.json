@@ -1,6 +1,6 @@
 {
-  "name": "pricebuddy",
-  "version": "0.0.53",
+  "name": "pricebuddies",
+  "version": "0.0.56",
   "private": true,
   "scripts": {
     "dev": "next dev",

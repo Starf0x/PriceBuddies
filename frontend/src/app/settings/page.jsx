@@ -127,7 +127,7 @@ export default function SettingsPage() {
               <div className="rounded-2xl border border-brand-border bg-brand-bg/55 p-4">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Email</p>
                 <p className="mt-2 text-sm font-semibold text-white">
-                  {user?.email || "hello@pricebuddy.app"}
+                  {user?.email || "hello@pricebuddies.app"}
                 </p>
               </div>
               <div className="rounded-2xl border border-brand-border bg-brand-bg/55 p-4">
