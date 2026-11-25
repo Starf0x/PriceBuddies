@@ -13,7 +13,7 @@ class ManifestController extends Controller
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $name = config('app.name', 'PriceBuddy');
+        $name = config('app.name', 'PriceBuddies');
         $scheme = parse_url($request->url(), PHP_URL_SCHEME);
         $domain = parse_url($request->url(), PHP_URL_HOST);
         $url = $scheme.'://'.$domain;

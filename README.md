@@ -1,3 +1,31 @@
+# PriceBuddies
+
+> **PriceBuddies is a fork of [PriceBuddy](https://github.com/jez500/pricebuddy) by jez500**, licensed under GPL-3.0 (same license here).
+> All credit for the application goes to the original project. This fork adds an Unraid single-container setup with SQLite.
+
+## Install on Unraid (single container, SQLite)
+1. Unraid terminal:
+   ```
+   wget -O /boot/config/plugins/dockerMan/templates-user/my-PriceBuddies.xml https://raw.githubusercontent.com/Starf0x/PriceBuddies/main/unraid/pricebuddies.xml
+   ```
+2. **Docker → Add Container → Template: PriceBuddies.** Keep **Data** = `/mnt/user/appdata/pricebuddies`, set **Admin e-mail** and **Admin password**, **Apply**.
+3. Open `http://<unraid-ip>:8080` and log in with that admin account.
+4. Optional, for JavaScript-heavy shops: install `unraid/pricebuddies-scraper.xml` the same way (port 3030) and set **Scraper URL** in PriceBuddies to `http://<unraid-ip>:3030`.
+
+## Fork notes / resume info
+- **Last updated:** 2026-11-25 09:55 (Europe/Amsterdam)
+- **Versioning (fork):** starts at 0.0.50, +3 per release; first release on this base: **v0.0.62**. Tags `v*` build `ghcr.io/starf0x/pricebuddies` (see `.github/workflows/ci.yml`).
+- **History:** until 2026-11-25 this repo held a fork of a different project (chahel1817/PriceBuddy); that code is kept in branch `backup/chahel-v0.0.59`.
+- **Changes vs upstream (v0.0.62):**
+  - `docker/php/start-app.sh`: `DB_CONNECTION=sqlite` → no DB server wait, creates `/app/storage/database.sqlite`; storage dirs created before the first artisan call (empty bind mounts broke `key:generate`); `.env` (APP_KEY) persisted in `/app/storage/.env`; secrets no longer printed in logs.
+  - Name PriceBuddies (`APP_NAME` default, logo text, mail sender, test notifications).
+  - `unraid/`: templates for PriceBuddies and the optional scraper.
+  - CI publishes to ghcr.io instead of Docker Hub.
+- **Tested (cloud, 2026-11-25):** upstream image + new start script with SQLite on an empty bind mount: migrations, admin user, login, Settings save, product create page.
+- **Next:** Dutch store presets (bol.com, Coolblue, joybuy.nl…) and check joybuy.nl scraping.
+
+---
+
 # <img src="public/images/logo-full.svg" width="250" height="auto" alt="PriceBuddy">
 
 **Track prices from the stores you actually use. Run it yourself. Keep the data. Know when a deal is real.**

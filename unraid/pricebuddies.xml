@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- Unraid template for PriceBuddies (fork of jez500/pricebuddy).
+     Install: wget -O /boot/config/plugins/dockerMan/templates-user/my-PriceBuddies.xml https://raw.githubusercontent.com/Starf0x/PriceBuddies/main/unraid/pricebuddies.xml -->
+<Container version="2">
+  <Name>PriceBuddies</Name>
+  <Repository>ghcr.io/starf0x/pricebuddies:latest</Repository>
+  <Registry>https://github.com/Starf0x/PriceBuddies/pkgs/container/pricebuddies</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/Starf0x/PriceBuddies/issues</Support>
+  <Project>https://github.com/Starf0x/PriceBuddies</Project>
+  <Overview>Self-hosted price tracker (fork of jez500/pricebuddy). Single container with SQLite: no database container needed. Data, settings and the app key are stored in the Data path. For JavaScript-heavy shops, also install the PriceBuddies-Scraper template and set the Scraper URL.</Overview>
+  <Category>Tools: Productivity:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/Starf0x/PriceBuddies/main/public/images/icon.png</Icon>
+  <Config Name="Web UI port" Target="80" Default="8080" Mode="tcp" Description="Port for the web interface" Type="Port" Display="always" Required="true" Mask="false">8080</Config>
+  <Config Name="Data" Target="/app/storage" Default="/mnt/user/appdata/pricebuddies" Mode="rw" Description="SQLite database (database.sqlite), .env with app key, logs and uploads" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/pricebuddies</Config>
+  <Config Name="Admin e-mail" Target="APP_USER_EMAIL" Default="admin@example.com" Description="First admin account (only used on first start)" Type="Variable" Display="always" Required="true" Mask="false">admin@example.com</Config>
+  <Config Name="Admin password" Target="APP_USER_PASSWORD" Default="" Description="First admin password (only used on first start; change it later in Account settings)" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Scraper URL" Target="SCRAPER_BASE_URL" Default="" Description="Optional: URL of the PriceBuddies-Scraper container, e.g. http://192.168.1.10:3030" Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="App URL" Target="APP_URL" Default="" Description="Optional: URL you open PriceBuddies on, e.g. http://192.168.1.10:8080 (used in e-mails/links)" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Database" Target="DB_CONNECTION" Default="sqlite" Description="sqlite (default). Use mysql only with your own MySQL server and DB_HOST/DB_USERNAME/DB_PASSWORD/DB_DATABASE." Type="Variable" Display="advanced" Required="true" Mask="false">sqlite</Config>
+  <Config Name="Default stores" Target="DEFAULT_STORES_COUNTRY" Default="all" Description="Store presets created on first start" Type="Variable" Display="advanced" Required="false" Mask="false">all</Config>
+  <Config Name="Timezone" Target="TZ" Default="Europe/Amsterdam" Description="" Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Amsterdam</Config>
+</Container>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- Optional browser-based scraper for PriceBuddies (needed for JavaScript-heavy shops).
+     Install: wget -O /boot/config/plugins/dockerMan/templates-user/my-PriceBuddies-Scraper.xml https://raw.githubusercontent.com/Starf0x/PriceBuddies/main/unraid/pricebuddies-scraper.xml
+     Then set "Scraper URL" in the PriceBuddies container to http://<unraid-ip>:3030 -->
+<Container version="2">
+  <Name>PriceBuddies-Scraper</Name>
+  <Repository>jez500/seleniumbase-scrapper:latest</Repository>
+  <Registry>https://hub.docker.com/r/jez500/seleniumbase-scrapper</Registry>
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Project>https://github.com/Starf0x/PriceBuddies</Project>
+  <Overview>Headless-browser scraper API used by PriceBuddies for shops that need JavaScript.</Overview>
+  <Category>Tools:</Category>
+  <ExtraParams>--shm-size=1g</ExtraParams>
+  <Config Name="API port" Target="3000" Default="3030" Mode="tcp" Description="PriceBuddies connects to http://[IP]:this-port" Type="Port" Display="always" Required="true" Mask="false">3030</Config>
+</Container>
