@@ -47,7 +47,9 @@ class StoreUrl implements DataAwareRule, ValidationRule
                 $fail('The url does not contain a valid title or price');
             }
         } elseif ($shouldCreateStore && ! AutoCreateStore::canAutoCreateFromUrl($value)) {
-            $fail('Unable to auto create store');
+            $fail(AutoCreateStore::scraperApiAvailable()
+                ? 'Unable to auto create store: no title or price found on this page, also not via the scraper.'
+                : 'Unable to auto create store: no title or price found. This shop may block automatic requests; install the PriceBuddies scraper container and set SCRAPER_BASE_URL.');
         }
     }
 

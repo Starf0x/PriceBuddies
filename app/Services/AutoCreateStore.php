@@ -32,7 +32,15 @@ class AutoCreateStore
         $this->strategies = config('price_buddy.auto_create_store_strategies', []);
 
         if (empty($html)) {
-            $this->scraperService = WebScraper::make($scraper)
+            $this->scraperService = WebScraper::make($scraper);
+
+            if ($scraper === self::ALT_SCRAPER) {
+                /** @var \Jez500\WebScraperForLaravel\WebScraperApi $api */
+                $api = $this->scraperService;
+                $api->setScraperApiBaseUrl(config('price_buddy.scraper_api_url', 'http://scraper:3000'));
+            }
+
+            $this->scraperService = $this->scraperService
                 ->setConnectTimeout($timeout)
                 ->setRequestTimeout($timeout)
                 ->from($url)
@@ -55,7 +63,59 @@ class AutoCreateStore
 
     public static function canAutoCreateFromUrl(string $url, int $timeout = 30): bool
     {
-        return ! is_null(self::new($url, timeout: $timeout)->getStoreAttributes());
+        return ! is_null(self::detectStoreAttributes($url, $timeout));
+    }
+
+    /**
+     * PriceBuddies: try a plain HTTP request first. Shops that block bots (e.g. joybuy.nl)
+     * return a challenge page without title/price, so retry once through the scraper
+     * container (SCRAPER_BASE_URL) when it is reachable, and let the store use it.
+     */
+    public static function detectStoreAttributes(string $url, int $timeout = 30): ?array
+    {
+        // Validation and creation both detect in the same request: fetch only once.
+        return once(fn () => self::detectStoreAttributesUncached($url, $timeout));
+    }
+
+    protected static function detectStoreAttributesUncached(string $url, int $timeout): ?array
+    {
+        $attributes = self::new($url, timeout: $timeout)->getStoreAttributes();
+
+        if ($attributes !== null || ! self::scraperApiAvailable()) {
+            return $attributes;
+        }
+
+        $attributes = self::new($url, scraper: self::ALT_SCRAPER, timeout: 60)->getStoreAttributes();
+
+        if ($attributes !== null) {
+            $attributes['settings']['scraper_service'] = self::ALT_SCRAPER;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Quick TCP check (2s) so a missing scraper container does not add a long wait.
+     */
+    public static function scraperApiAvailable(int $timeout = 2): bool
+    {
+        $parts = parse_url((string) config('price_buddy.scraper_api_url', ''));
+        $host = $parts['host'] ?? null;
+
+        if (empty($host)) {
+            return false;
+        }
+
+        $port = $parts['port'] ?? (($parts['scheme'] ?? 'http') === 'https' ? 443 : 80);
+        $connection = @fsockopen($host, $port, $errno, $errstr, $timeout);
+
+        if ($connection === false) {
+            return false;
+        }
+
+        fclose($connection);
+
+        return true;
     }
 
     /**
@@ -70,7 +130,7 @@ class AutoCreateStore
             return $existing;
         }
 
-        $attributes = self::new($url)->getStoreAttributes();
+        $attributes = self::detectStoreAttributes($url);
 
         if ($attributes && $userId) {
             $attributes['user_id'] = $userId;
