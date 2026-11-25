@@ -61,8 +61,8 @@ class TestAppriseAction extends Action
         try {
             $response = AppriseChannel::sendRequest(
                 AppriseChannel::makeUrl($baseUrl, $token),
-                'Test PriceBuddy notification',
-                'This is a test notification from PriceBuddy',
+                'Test PriceBuddies notification',
+                'This is a test notification from PriceBuddies',
                 url('/')
             );
 

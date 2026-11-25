@@ -62,7 +62,7 @@ class TestGotifyAction extends Action
             $response = GotifyChannel::sendRequest(
                 GotifyChannel::makeUrl($baseUrl, $token),
                 'Test Notification',
-                'This is a test notification from PriceBuddy',
+                'This is a test notification from PriceBuddies',
                 url('/')
             );
 
