@@ -42,6 +42,11 @@ else
   done
 fi
 
+# PriceBuddies: compile Blade views inside the container instead of the storage
+# volume. On Unraid /mnt/user (FUSE) writing thousands of small files is slow.
+export VIEW_COMPILED_PATH="${VIEW_COMPILED_PATH:-/app/bootstrap/cache/views}"
+mkdir -p "$VIEW_COMPILED_PATH" && chmod 777 "$VIEW_COMPILED_PATH"
+
 # Optimize clear once DB ready
 php artisan optimize:clear
 
@@ -50,11 +55,9 @@ php artisan buddy:init-db
 
 # Cache it all
 php artisan cache:clear
+# optimize already caches config, events, routes and views (no need to repeat them)
 php artisan optimize
 php artisan icons:cache
-php artisan config:cache
-php artisan route:cache
-php artisan event:cache
 php artisan buddy:regenerate-price-cache
 
 # Install xdebug if running in Lando environment
