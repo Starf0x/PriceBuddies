@@ -100,6 +100,22 @@ class SchemaOrgServiceTest extends TestCase
             ],
         ];
         $this->assertEquals('25.00', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'price'));
+
+        // priceSpecification as a list (joybuy.nl)
+        $jsonLd = [
+            [
+                '@type' => 'Product',
+                'offers' => [
+                    '@type' => 'Offer',
+                    'priceCurrency' => 'EUR',
+                    'priceSpecification' => [
+                        ['@type' => 'UnitPriceSpecification', 'price' => '13.19', 'priceCurrency' => 'EUR'],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals('13.19', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'price'));
+        $this->assertEquals('EUR', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'price_currency'));
     }
 
     public function test_parse_schema_org_handles_image_array()

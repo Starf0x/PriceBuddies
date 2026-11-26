@@ -37,10 +37,10 @@ class SchemaOrgService
             'title' => data_get($schema, 'name'),
             // Full description.
             'description' => data_get($schema, 'description'),
-            // First try for lowest, then price, finally priceSpecification price.
-            'price' => data_get($schema, 'offers.lowPrice', data_get($schema, 'offers.price', data_get($schema, 'offers.0.price', data_get($schema, 'offers.priceSpecification.price')))),
+            // First try for lowest, then price, finally priceSpecification price (object or list, e.g. joybuy.nl).
+            'price' => data_get($schema, 'offers.lowPrice', data_get($schema, 'offers.price', data_get($schema, 'offers.0.price', data_get($schema, 'offers.priceSpecification.price', data_get($schema, 'offers.priceSpecification.0.price'))))),
             // Currency.
-            'price_currency' => data_get($schema, 'offers.priceCurrency', data_get($schema, 'offers.0.priceCurrency', data_get($schema, 'offers.priceSpecification.priceCurrency', 'USD'))),
+            'price_currency' => data_get($schema, 'offers.priceCurrency', data_get($schema, 'offers.0.priceCurrency', data_get($schema, 'offers.priceSpecification.priceCurrency', data_get($schema, 'offers.priceSpecification.0.priceCurrency', 'USD')))),
             // Image: a string, an array of strings, an ImageObject ({url: ...}), or an array of those.
             'image' => self::firstImageString(data_get($schema, 'image')),
             // Availability should be a string, sometimes array of strings.
