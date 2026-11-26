@@ -24,6 +24,7 @@
 - **Tested (cloud, 2026-11-25):** upstream image + new start script with SQLite on an empty bind mount: migrations, admin user, login, Settings save, product create page.
 - **v0.0.65:** auto-create store retries through the scraper container (`SCRAPER_BASE_URL`, quick 2s reachability check) when a plain HTTP request finds no title/price (bot-protected shops such as joybuy.nl); the new store then uses the scraper. Detection runs once per request (was twice), and the error explains that the scraper is needed. Code: `app/Services/AutoCreateStore.php`, `app/Rules/StoreUrl.php`.
 - **v0.0.68:** faster start on Unraid: compiled Blade views go to `/app/bootstrap/cache/views` inside the container (`VIEW_COMPILED_PATH`) instead of the appdata share (slow FUSE writes, ~23s), and duplicate cache commands after `optimize` were removed (`docker/php/start-app.sh`).
+- **v0.0.71:** fix for SQLite: store lookup by domain (`Store::scopeDomainFilter`) always returned nothing, because SQLite `whereJsonContains` only matches scalars. So no product URL could be added, and every attempt created a new store. It now uses `json_tree` on SQLite.
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---

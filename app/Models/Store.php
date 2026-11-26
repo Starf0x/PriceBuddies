@@ -159,6 +159,19 @@ class Store extends Model
         // `domains` is normally an array of objects, but the store API and StoreFactory::forUrl()
         // can also store a single bare object. MySQL's JSON_CONTAINS matches a bare-object needle against
         // both shapes, but Postgres' @> only matches like with like, so check both needles.
+        // PriceBuddies: SQLite's whereJsonContains only compares scalar values, so an
+        // object needle never matches and every store lookup came back empty.
+        if ($query->getModel()->getConnection()->getDriverName() === 'sqlite') {
+            $column = $query->getModel()->qualifyColumn('domains');
+
+            return $query->where(function (Builder $subQuery) use ($domains, $column) {
+                foreach ($domains as $domain) {
+                    // json_tree covers both shapes: a list of objects and a single bare object.
+                    $subQuery->orWhereRaw("exists (select 1 from json_tree({$column}) where json_tree.key = 'domain' and json_tree.atom = ?)", [$domain]);
+                }
+            });
+        }
+
         return $query->where(function (Builder $subQuery) use ($domains) {
             foreach ($domains as $domain) {
                 $subQuery->orWhereJsonContains('domains', ['domain' => $domain])
