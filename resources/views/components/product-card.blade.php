@@ -16,6 +16,7 @@
         <div
             class="flex-1 bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 rounded-r-xl"
             :class="expanded ? 'rounded-bl-none' : ''"
+            style="position: relative"
         >
             <a class="flex gap-2" href="{{ $product->view_url }}">
                 <div @class(['w-20 h-20 min-w-20 m-2 rounded-md overflow-hidden p-1 flex items-center', 'cursor-grab' => $draggable]) @if ($draggable) x-sortable-handle @endif>
@@ -63,6 +64,21 @@
                     </div>
                 </div>
             </a>
+
+            {{-- PriceBuddies: open the (cheapest) offer itself in a new tab. --}}
+            @if ($latestPrice?->getUrl())
+                <a
+                    href="{{ $latestPrice->getUrl() }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="position: absolute; bottom: calc(40px + .5rem); right: .5rem"
+                    class="pb-card-shop-link inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-400/10 ring-1 ring-primary-600/20 dark:ring-primary-400/30 hover:bg-primary-100 dark:hover:bg-primary-400/20"
+                    title="{{ __('Open the offer at :store', ['store' => $latestPrice->getStoreName()]) }}"
+                >
+                    <x-filament::icon icon="heroicon-m-arrow-top-right-on-square" class="h-4 w-4" />
+                    {{ __('Go to deal') }}
+                </a>
+            @endif
 
             <div class="bg-custom-400/10 hover:bg-custom-400/20 rounded-br overflow-hidden">
                 <x-range-chart :product="$product" height="40px"/>

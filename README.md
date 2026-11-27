@@ -32,6 +32,7 @@
 - **v0.0.86:** dark look from My Audiobook Collection: custom gray palette (bg #0e1014, panels #16191f/#1c2027), purple/cyan background glow, dark mode by default (`AdminPanelProvider`).
 - **v0.0.89:** transparent top bar in dark mode; background glow hues turn 37° per day like My Audiobook Collection (`AdminPanelProvider::BACKGROUND_STYLE`).
 - **v0.0.89:** profile picture: pick one of 120 bundled CC0 avatars (DiceBear) under Account settings > Avatar (`public/images/avatars`, `User::getFilamentAvatarUrl`).
+- **v0.0.92:** "Go to deal" button on each dashboard card, opens the cheapest offer's shop page in a new tab (`components/product-card.blade.php`).
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---
