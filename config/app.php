@@ -77,6 +77,10 @@ return [
 
     'timezone' => env('APP_TIMEZONE', 'UTC'),
 
+    // PriceBuddies: run scheduled scrapes (e.g. "0 6 * * *") in the container's local
+    // time zone (TZ, Europe/Amsterdam in the Unraid template) instead of UTC.
+    'schedule_timezone' => env('SCHEDULE_TIMEZONE', env('TZ', env('APP_TIMEZONE', 'UTC'))),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
