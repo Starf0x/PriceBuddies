@@ -1,4 +1,4 @@
-// Generates 50 soft-shaded cartoon avatars (own drawing, no third-party art).
+// Generates 50 soft-shaded illustrated avatars with natural proportions (own drawing, no third-party art).
 const fs = require('fs');
 const out = process.argv[2];
 const count = Number(process.argv[3] || 50);
@@ -43,6 +43,7 @@ function avatar(i) {
   const blouse = soft && rnd() < 0.5;
 
   const id = `a${i}`;
+  const lip = shade(skin, -0.28).replace(/^#(..)/, (m, r) => '#' + Math.min(255, parseInt(r, 16) + 28).toString(16).padStart(2, '0'));
   const skinLight = shade(skin, 0.25);
   const skinDark = shade(skin, -0.22);
   const hairLight = shade(hair, 0.3);
@@ -57,7 +58,7 @@ function avatar(i) {
     <linearGradient id="${id}jacket" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(jacket, 0.25)}"/><stop offset="1" stop-color="${shade(jacket, -0.3)}"/></linearGradient>
     <linearGradient id="${id}shirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shirt}"/><stop offset="1" stop-color="${shade(shirt, -0.15)}"/></linearGradient>
     <radialGradient id="${id}iris" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="${shade(eye, 0.45)}"/><stop offset="1" stop-color="${shade(eye, -0.35)}"/></radialGradient>
-    <radialGradient id="${id}blush" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff6f7d" stop-opacity=".45"/><stop offset="1" stop-color="#ff6f7d" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}blush" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e86a6a" stop-opacity=".18"/><stop offset="1" stop-color="#ff6f7d" stop-opacity="0"/></radialGradient>
     <radialGradient id="${id}eyew" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e8ee"/></radialGradient>
     <clipPath id="${id}c"><circle cx="100" cy="104" r="86"/></clipPath>
     <clipPath id="${id}m"><path d="M82 118 Q100 140 118 118 Q100 124 82 118Z"/></clipPath>
@@ -127,30 +128,30 @@ function avatar(i) {
   }
 
   const lashes = soft
-    ? `<path fill="none" stroke="#1d1410" stroke-width="2" stroke-linecap="round" d="M71 84 L67 80 M74 81 L71 77 M126 84 L130 80 M123 81 L126 77"/>`
+    ? `<path fill="none" stroke="#1d1410" stroke-width="1.2" stroke-linecap="round" d="M73.5 89 L71.5 87.5 M127.5 89 L129.5 87.5"/>`
     : '';
   const eyeShape = (cx) => `
-    <ellipse cx="${cx}" cy="92" rx="11.5" ry="13" fill="url(#${id}eyew)"/>
-    <circle cx="${cx + 1}" cy="94" r="7.6" fill="url(#${id}iris)"/>
-    <circle cx="${cx + 1}" cy="94" r="3.8" fill="#14100e"/>
-    <circle cx="${cx + 3.6}" cy="90.4" r="2.6" fill="#ffffff"/>
-    <circle cx="${cx - 1.6}" cy="97" r="1.1" fill="#ffffff" opacity=".85"/>
-    <path fill="none" stroke="#2a1c16" stroke-width="2.4" stroke-linecap="round" d="M${cx - 11.5} 90 Q${cx} 76 ${cx + 11.5} 90"/>`;
+    <path fill="${skinDark}" opacity=".35" d="M${cx - 11} 91 Q${cx} 81 ${cx + 11} 91 Q${cx} 86 ${cx - 11} 91Z"/>
+    <path fill="url(#${id}eyew)" d="M${cx - 9} 92 Q${cx} 85 ${cx + 9} 92 Q${cx} 97.5 ${cx - 9} 92Z"/>
+    <clipPath id="${id}e${cx}"><path d="M${cx - 9} 92 Q${cx} 85 ${cx + 9} 92 Q${cx} 97.5 ${cx - 9} 92Z"/></clipPath>
+    <g clip-path="url(#${id}e${cx})"><circle cx="${cx}" cy="91.6" r="4.3" fill="url(#${id}iris)"/><circle cx="${cx}" cy="91.6" r="1.9" fill="#120d0b"/><circle cx="${cx + 1.5}" cy="90.2" r="1" fill="#ffffff" opacity=".9"/></g>
+    <path fill="none" stroke="#2a1c16" stroke-width="1.5" stroke-linecap="round" d="M${cx - 9.5} 92 Q${cx} 84.2 ${cx + 9.5} 92"/>
+    <path fill="none" stroke="${skinDark}" stroke-width=".9" opacity=".7" d="M${cx - 7} 94.5 Q${cx} 98.4 ${cx + 7} 94.5"/>`;
 
-  const brows = `<path fill="none" stroke="${hairDark}" stroke-width="${soft ? 3.2 : 4.6}" stroke-linecap="round" d="M70 ${soft ? 73 : 74} Q83 ${soft ? 66 : 67} 94 72"/>
-    <path fill="none" stroke="${hairDark}" stroke-width="${soft ? 3.2 : 4.6}" stroke-linecap="round" d="M106 72 Q117 ${soft ? 66 : 67} 130 ${soft ? 73 : 74}"/>`;
+  const brows = `<path fill="none" stroke="${hairDark}" stroke-width="${soft ? 2 : 3}" stroke-linecap="round" opacity=".9" d="M71 ${soft ? 81 : 82} Q82 ${soft ? 76.5 : 78} 93 80"/>
+    <path fill="none" stroke="${hairDark}" stroke-width="${soft ? 2 : 3}" stroke-linecap="round" opacity=".9" d="M107 80 Q118 ${soft ? 76.5 : 78} 129 ${soft ? 81 : 82}"/>`;
 
   const beardSvg = beard
-    ? `<path fill="${H}" d="M60 104 C62 132 80 152 100 152 C120 152 138 132 140 104 C134 118 126 122 118 118 Q100 112 82 118 C74 122 66 118 60 104Z"/>
-       <path fill="${H}" d="M84 114 Q100 106 116 114 Q100 112 84 114Z"/>`
+    ? `<path fill="${H}" opacity=".92" d="M62 100 C64 126 80 146 100 147 C120 146 136 126 138 100 C132 116 124 120 116 118 Q108 117 112 128 Q100 134 88 128 Q92 117 84 118 C76 120 68 116 62 100Z"/>
+       <path fill="${H}" d="M86 121 Q93 116 100 119 Q107 116 114 121 Q107 119.5 100 121 Q93 119.5 86 121Z"/>`
     : '';
 
   const glassesSvg = glasses
-    ? `<g fill="none" stroke="#2b2b30" stroke-width="2.6"><rect x="67" y="80" width="30" height="25" rx="9"/><rect x="103" y="80" width="30" height="25" rx="9"/><path d="M97 90 Q100 87 103 90 M67 88 L57 85 M133 88 L143 85"/></g>`
+    ? `<g fill="none" stroke="#2b2b30" stroke-width="1.8"><rect x="69" y="83" width="26" height="18" rx="7"/><rect x="105" y="83" width="26" height="18" rx="7"/><path d="M95 90 Q100 87 105 90 M69 89 L61 87 M131 89 L139 87"/></g>`
     : '';
 
   const earringsSvg = earrings
-    ? `<g fill="none" stroke="#e2b23c" stroke-width="2.6"><circle cx="57" cy="116" r="6"/><circle cx="143" cy="116" r="6"/></g>`
+    ? `<g fill="none" stroke="#e2b23c" stroke-width="1.8"><circle cx="60" cy="112" r="4"/><circle cx="140" cy="112" r="4"/></g>`
     : '';
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 18 172 172" width="200" height="200">${defs}
@@ -158,21 +159,25 @@ function avatar(i) {
     <rect width="200" height="200" fill="url(#${id}bg)"/>
     ${back}
     ${body}
-    <path fill="url(#${id}neck)" d="M86 118 L114 118 L116 148 Q100 156 84 148Z"/>
-    <ellipse cx="57" cy="98" rx="7.5" ry="11" fill="${skin}"/><ellipse cx="143" cy="98" rx="7.5" ry="11" fill="${skin}"/>
-    <ellipse cx="57.5" cy="98" rx="3.5" ry="6" fill="${skinDark}" opacity=".5"/><ellipse cx="142.5" cy="98" rx="3.5" ry="6" fill="${skinDark}" opacity=".5"/>
-    <path fill="url(#${id}skin)" d="M58 88 C58 52 76 40 100 40 C124 40 142 52 142 88 C142 120 124 140 100 140 C76 140 58 120 58 88Z"/>
+    <path fill="url(#${id}neck)" d="M87 124 L113 124 L116 150 Q100 158 84 150Z"/>
+    <ellipse cx="60" cy="96" rx="6" ry="10" fill="${skin}"/><ellipse cx="140" cy="96" rx="6" ry="10" fill="${skin}"/>
+    <ellipse cx="60.5" cy="96" rx="2.6" ry="5.5" fill="${skinDark}" opacity=".5"/><ellipse cx="139.5" cy="96" rx="2.6" ry="5.5" fill="${skinDark}" opacity=".5"/>
+    <path fill="url(#${id}skin)" d="M61 86 C61 52 78 40 100 40 C122 40 139 52 139 86 C139 108 133 124 121 135 Q110 144 100 144 Q90 144 79 135 C67 124 61 108 61 86Z"/>
+    <path fill="${skinDark}" opacity=".18" d="M64 100 C66 120 78 136 100 142 C84 134 72 120 64 100Z M136 100 C134 120 122 136 100 142 C116 134 128 120 136 100Z"/>
     ${earringsSvg}
     <ellipse cx="75" cy="111" rx="11" ry="7" fill="url(#${id}blush)"/><ellipse cx="125" cy="111" rx="11" ry="7" fill="url(#${id}blush)"/>
     ${beardSvg}
     ${eyeShape(82)}${eyeShape(118)}
     ${lashes}
     ${brows}
-    <path fill="${skinDark}" opacity=".55" d="M96 108 Q100 113 104 108 Q103 111 100 111.5 Q97 111 96 108Z"/>
-    <path fill="none" stroke="${skinLight}" stroke-width="2" stroke-linecap="round" opacity=".8" d="M99 96 L99 104"/>
-    <path fill="#6b1d27" d="M82 118 Q100 140 118 118 Q100 124 82 118Z"/>
-    <g clip-path="url(#${id}m)"><rect x="80" y="116" width="40" height="7" fill="#ffffff"/><ellipse cx="100" cy="134" rx="9" ry="6" fill="#e86a78"/></g>
-    <path fill="none" stroke="${skinDark}" stroke-width="1.6" stroke-linecap="round" d="M80 117 Q78 116 77 114 M120 117 Q122 116 123 114"/>
+    <path fill="none" stroke="${skinDark}" stroke-width="1.4" stroke-linecap="round" opacity=".55" d="M96 92 C95 100 93 106 92.5 110"/>
+    <path fill="none" stroke="${skinLight}" stroke-width="2.4" stroke-linecap="round" opacity=".7" d="M100.5 94 L101 107"/>
+    <path fill="${skinDark}" opacity=".45" d="M92 111 Q96 115 100 113.5 Q104 115 108 111 Q106 116.5 100 116.5 Q94 116.5 92 111Z"/>
+    <ellipse cx="96" cy="113" rx="2" ry="1.1" fill="${shade(skin, -0.5)}" opacity=".6"/><ellipse cx="104" cy="113" rx="2" ry="1.1" fill="${shade(skin, -0.5)}" opacity=".6"/>
+    <path fill="${lip}" d="M88 124 Q94 121 100 122.5 Q106 121 112 124 Q106 125.5 100 125.5 Q94 125.5 88 124Z"/>
+    <path fill="${shade(lip, 0.12)}" d="M89 124.5 Q100 126.5 111 124.5 Q106 131 100 131 Q94 131 89 124.5Z"/>
+    <path fill="#ffffff" opacity=".25" d="M95 127.5 Q100 129.5 105 127.5 Q100 128.6 95 127.5Z"/>
+    <path fill="none" stroke="${shade(lip, -0.4)}" stroke-width="1.1" stroke-linecap="round" d="M87.5 123.6 Q100 127.8 112.5 123.6"/>
     ${glassesSvg}
     ${front}
   </g>
