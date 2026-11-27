@@ -35,6 +35,7 @@
 - **v0.0.92:** "Go to deal" button on each dashboard card, opens the cheapest offer's shop page in a new tab (`components/product-card.blade.php`).
 - **v0.0.95:** avatars replaced by 50 own illustrated avatars with natural proportions (`scripts/generate-avatars.js`, `public/images/avatars`). A previously picked avatar falls back to initials. Users can also upload their own picture (Account settings > Avatar > Own picture, stored on the public disk under `avatars/`; wins over the bundled choice). Bundled avatars may be svg, png, jpg or webp. Startup now also creates `storage/framework/cache` (missing dir broke Livewire uploads).
 - **v0.0.98:** "Go to deal" button always shown (falls back to the product's first shop link when the price cache has no URL yet); image built without provenance/SBOM attestations so Unraid no longer keeps showing "update available".
+- **v0.1.0:** image pushed with Docker v2 media types (`oci-mediatypes=false`) so Unraid's update check matches the digest.
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---

@@ -85,7 +85,9 @@ jobs:
           context: .
           platforms: linux/amd64
           file: ./docker/php.dockerfile
-          push: true
+          # Docker v2 media types (not OCI): Unraid's update check compares the digest of a
+          # Docker v2 manifest and keeps reporting "update available" for OCI manifests.
+          outputs: type=image,push=true,oci-mediatypes=false
           # Plain single-platform manifest: with provenance/SBOM attestations the image is an
           # OCI index whose digest Unraid never matches, so it keeps showing "update available".
           provenance: false
