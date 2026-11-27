@@ -62,7 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 #0e1014;
             background-attachment: fixed;
         }
-        .dark .fi-topbar > nav { background: linear-gradient(90deg, #171a21, #12141a); }
+        .dark .fi-topbar > nav { background: transparent; box-shadow: none; --tw-ring-color: transparent; }
         .dark .fi-sidebar, .dark .fi-sidebar-header { background: transparent; }
     </style>';
 
