@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 18 172 172" width="200" height="200">
+  <defs>
+    <radialGradient id="a23bg" cx="50%" cy="35%" r="75%"><stop offset="0" stop-color="#eff9f3"/><stop offset="1" stop-color="#cde0d4"/></radialGradient>
+    <radialGradient id="a23skin" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#efc6a9"/><stop offset=".65" stop-color="#eab38c"/><stop offset="1" stop-color="#b78c6d"/></radialGradient>
+    <linearGradient id="a23neck" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b78c6d"/><stop offset="1" stop-color="#eab38c"/></linearGradient>
+    <linearGradient id="a23hair" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="#816a5e"/><stop offset=".55" stop-color="#4b2a19"/><stop offset="1" stop-color="#311b10"/></linearGradient>
+    <linearGradient id="a23jacket" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#638377"/><stop offset="1" stop-color="#213f34"/></linearGradient>
+    <linearGradient id="a23shirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3eee2"/><stop offset="1" stop-color="#cfcac0"/></linearGradient>
+    <radialGradient id="a23iris" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#8ba5bf"/><stop offset="1" stop-color="#1d3c5a"/></radialGradient>
+    <radialGradient id="a23blush" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e86a6a" stop-opacity=".18"/><stop offset="1" stop-color="#ff6f7d" stop-opacity="0"/></radialGradient>
+    <radialGradient id="a23eyew" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e8ee"/></radialGradient>
+    <clipPath id="a23c"><circle cx="100" cy="104" r="86"/></clipPath>
+    <clipPath id="a23m"><path d="M82 118 Q100 140 118 118 Q100 124 82 118Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#a23c)">
+    <rect width="200" height="200" fill="url(#a23bg)"/>
+    <path fill="url(#a23hair)" d="M50 92 C42 36 158 36 150 92 L158 170 C140 182 60 182 42 170 Z"/>
+    <path fill="url(#a23jacket)" d="M20 200 C22 166 46 148 80 144 L120 144 C154 148 178 166 180 200Z"/>
+      <path fill="url(#a23shirt)" d="M80 144 L100 190 L120 144Z"/>
+      <path fill="#e0dbd0" d="M80 144 L92 166 L100 150 L108 166 L120 144 L112 140 L100 152 L88 140Z"/>
+      
+      <path fill="#1f3b30" d="M80 144 L94 186 L86 200 L72 158Z" opacity=".55"/>
+      <path fill="#1f3b30" d="M120 144 L106 186 L114 200 L128 158Z" opacity=".55"/>
+    <path fill="url(#a23neck)" d="M87 124 L113 124 L116 150 Q100 158 84 150Z"/>
+    <ellipse cx="60" cy="96" rx="6" ry="10" fill="#eab38c"/><ellipse cx="140" cy="96" rx="6" ry="10" fill="#eab38c"/>
+    <ellipse cx="60.5" cy="96" rx="2.6" ry="5.5" fill="#b78c6d" opacity=".5"/><ellipse cx="139.5" cy="96" rx="2.6" ry="5.5" fill="#b78c6d" opacity=".5"/>
+    <path fill="url(#a23skin)" d="M61 86 C61 52 78 40 100 40 C122 40 139 52 139 86 C139 108 133 124 121 135 Q110 144 100 144 Q90 144 79 135 C67 124 61 108 61 86Z"/>
+    <path fill="#b78c6d" opacity=".18" d="M64 100 C66 120 78 136 100 142 C84 134 72 120 64 100Z M136 100 C134 120 122 136 100 142 C116 134 128 120 136 100Z"/>
+    <g fill="none" stroke="#e2b23c" stroke-width="1.8"><circle cx="60" cy="112" r="4"/><circle cx="140" cy="112" r="4"/></g>
+    <ellipse cx="75" cy="111" rx="11" ry="7" fill="url(#a23blush)"/><ellipse cx="125" cy="111" rx="11" ry="7" fill="url(#a23blush)"/>
+    
+    
+    <path fill="#b78c6d" opacity=".35" d="M71 91 Q82 81 93 91 Q82 86 71 91Z"/>
+    <path fill="url(#a23eyew)" d="M73 92 Q82 85 91 92 Q82 97.5 73 92Z"/>
+    <clipPath id="a23e82"><path d="M73 92 Q82 85 91 92 Q82 97.5 73 92Z"/></clipPath>
+    <g clip-path="url(#a23e82)"><circle cx="82" cy="91.6" r="4.3" fill="url(#a23iris)"/><circle cx="82" cy="91.6" r="1.9" fill="#120d0b"/><circle cx="83.5" cy="90.2" r="1" fill="#ffffff" opacity=".9"/></g>
+    <path fill="none" stroke="#2a1c16" stroke-width="1.5" stroke-linecap="round" d="M72.5 92 Q82 84.2 91.5 92"/>
+    <path fill="none" stroke="#b78c6d" stroke-width=".9" opacity=".7" d="M75 94.5 Q82 98.4 89 94.5"/>
+    <path fill="#b78c6d" opacity=".35" d="M107 91 Q118 81 129 91 Q118 86 107 91Z"/>
+    <path fill="url(#a23eyew)" d="M109 92 Q118 85 127 92 Q118 97.5 109 92Z"/>
+    <clipPath id="a23e118"><path d="M109 92 Q118 85 127 92 Q118 97.5 109 92Z"/></clipPath>
+    <g clip-path="url(#a23e118)"><circle cx="118" cy="91.6" r="4.3" fill="url(#a23iris)"/><circle cx="118" cy="91.6" r="1.9" fill="#120d0b"/><circle cx="119.5" cy="90.2" r="1" fill="#ffffff" opacity=".9"/></g>
+    <path fill="none" stroke="#2a1c16" stroke-width="1.5" stroke-linecap="round" d="M108.5 92 Q118 84.2 127.5 92"/>
+    <path fill="none" stroke="#b78c6d" stroke-width=".9" opacity=".7" d="M111 94.5 Q118 98.4 125 94.5"/>
+    <path fill="none" stroke="#1d1410" stroke-width="1.2" stroke-linecap="round" d="M73.5 89 L71.5 87.5 M127.5 89 L129.5 87.5"/>
+    <path fill="none" stroke="#311b10" stroke-width="2" stroke-linecap="round" opacity=".9" d="M71 81 Q82 76.5 93 80"/>
+    <path fill="none" stroke="#311b10" stroke-width="2" stroke-linecap="round" opacity=".9" d="M107 80 Q118 76.5 129 81"/>
+    <path fill="none" stroke="#b78c6d" stroke-width="1.4" stroke-linecap="round" opacity=".55" d="M96 92 C95 100 93 106 92.5 110"/>
+    <path fill="none" stroke="#efc6a9" stroke-width="2.4" stroke-linecap="round" opacity=".7" d="M100.5 94 L101 107"/>
+    <path fill="#b78c6d" opacity=".45" d="M92 111 Q96 115 100 113.5 Q104 115 108 111 Q106 116.5 100 116.5 Q94 116.5 92 111Z"/>
+    <ellipse cx="96" cy="113" rx="2" ry="1.1" fill="#755a46" opacity=".6"/><ellipse cx="104" cy="113" rx="2" ry="1.1" fill="#755a46" opacity=".6"/>
+    <path fill="#c48165" d="M88 124 Q94 121 100 122.5 Q106 121 112 124 Q106 125.5 100 125.5 Q94 125.5 88 124Z"/>
+    <path fill="#cb9077" d="M89 124.5 Q100 126.5 111 124.5 Q106 131 100 131 Q94 131 89 124.5Z"/>
+    <path fill="#ffffff" opacity=".25" d="M95 127.5 Q100 129.5 105 127.5 Q100 128.6 95 127.5Z"/>
+    <path fill="none" stroke="#764d3d" stroke-width="1.1" stroke-linecap="round" d="M87.5 123.6 Q100 127.8 112.5 123.6"/>
+    
+    <path fill="url(#a23hair)" d="M55 98 C50 50 76 32 102 32 C130 32 150 52 145 98 C138 72 126 60 104 56 C96 70 78 76 62 78 C58 84 56 90 55 98Z"/>
+  </g>
+</svg>

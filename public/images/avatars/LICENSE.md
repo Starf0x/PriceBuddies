@@ -1,5 +1,6 @@
 # Avatars
 
-Generated with DiceBear (https://www.dicebear.com, MIT) from styles that are all CC0 1.0:
-lorelei (Lisa Wischofsky), notionists (Zoish), open-peeps (Pablo Stanley), pixel-art and thumbs (DiceBear).
-24 per style, seeds `<style>-1` to `<style>-24`. Users pick one under Account settings > Avatar.
+50 illustrated avatars (`cartoon-01.svg` to `cartoon-50.svg`), drawn for PriceBuddies by
+`scripts/generate-avatars.js` (no third-party artwork). They fall under the project's license.
+Regenerate with: `node scripts/generate-avatars.js public/images/avatars 50`.
+Users pick one under Account settings > Avatar.

@@ -158,6 +158,16 @@ class UserResource extends Resource
             ->description(__('Choose a picture for your profile.'))
             ->collapsible()
             ->schema([
+                Forms\Components\FileUpload::make('settings.avatar_upload')
+                    ->label(__('Own picture'))
+                    ->helperText(__('Upload your own picture. It is used instead of the choice below; remove it to use the choice again.'))
+                    ->image()
+                    ->avatar()
+                    ->imageEditor()
+                    ->disk('public')
+                    ->directory(User::AVATAR_UPLOAD_DIR)
+                    ->visibility('public')
+                    ->maxSize(4096),
                 Forms\Components\Radio::make('settings.avatar')
                     ->hiddenLabel()
                     ->options($options)
