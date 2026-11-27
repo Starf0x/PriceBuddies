@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -109,16 +110,23 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     /** PriceBuddies: folder (under public/) holding the avatars a user can pick. */
     public const string AVATAR_PATH = 'images/avatars';
 
+    /** PriceBuddies: folder on the public disk for pictures users upload themselves. */
+    public const string AVATAR_UPLOAD_DIR = 'avatars';
+
     /**
-     * Avatar file names a user can pick, e.g. "lorelei-01.svg".
+     * Avatar file names a user can pick, e.g. "cartoon-01.svg" (svg, png, jpg or webp).
      *
      * @return list<string>
      */
     public static function avatarChoices(): array
     {
-        $files = glob(public_path(self::AVATAR_PATH.'/*.svg')) ?: [];
+        // No GLOB_BRACE: it is missing on musl (Alpine) builds of PHP.
+        $files = array_filter(
+            glob(public_path(self::AVATAR_PATH.'/*')) ?: [],
+            fn (string $file): bool => in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['svg', 'png', 'jpg', 'jpeg', 'webp'], true),
+        );
 
-        return array_map('basename', $files);
+        return array_values(array_map('basename', $files));
     }
 
     /**
@@ -126,6 +134,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      */
     public function getFilamentAvatarUrl(): ?string
     {
+        // An uploaded picture wins over a bundled choice.
+        $upload = data_get($this->settings, 'avatar_upload');
+
+        if (is_string($upload) && str_starts_with($upload, self::AVATAR_UPLOAD_DIR.'/') && ! str_contains($upload, '..')
+            && Storage::disk('public')->exists($upload)) {
+            // asset() rather than Storage::url(): APP_URL is often not set on self-hosted installs.
+            return asset('storage/'.$upload);
+        }
+
         $avatar = data_get($this->settings, 'avatar');
 
         if (! is_string($avatar) || ! in_array($avatar, self::avatarChoices(), true)) {

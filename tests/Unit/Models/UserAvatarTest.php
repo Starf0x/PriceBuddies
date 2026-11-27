@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UserAvatarTest extends TestCase
@@ -27,5 +28,20 @@ class UserAvatarTest extends TestCase
         $this->assertNull((new User(['settings' => []]))->getFilamentAvatarUrl());
         $this->assertNull((new User(['settings' => ['avatar' => '']]))->getFilamentAvatarUrl());
         $this->assertNull((new User(['settings' => ['avatar' => '../../.env']]))->getFilamentAvatarUrl());
+    }
+
+    public function test_uploaded_picture_wins_over_bundled_choice(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('avatars/me.png', 'png');
+
+        $user = new User(['settings' => ['avatar' => 'cartoon-05.svg', 'avatar_upload' => 'avatars/me.png']]);
+        $this->assertSame(asset('storage/avatars/me.png'), $user->getFilamentAvatarUrl());
+
+        $missing = new User(['settings' => ['avatar' => 'cartoon-05.svg', 'avatar_upload' => 'avatars/gone.png']]);
+        $this->assertSame(asset('images/avatars/cartoon-05.svg'), $missing->getFilamentAvatarUrl());
+
+        $outside = new User(['settings' => ['avatar_upload' => '../.env']]);
+        $this->assertNull($outside->getFilamentAvatarUrl());
     }
 }

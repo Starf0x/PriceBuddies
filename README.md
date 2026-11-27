@@ -33,7 +33,7 @@
 - **v0.0.89:** transparent top bar in dark mode; background glow hues turn 37° per day like My Audiobook Collection (`AdminPanelProvider::BACKGROUND_STYLE`).
 - **v0.0.89:** profile picture: pick one of 120 bundled CC0 avatars (DiceBear) under Account settings > Avatar (`public/images/avatars`, `User::getFilamentAvatarUrl`).
 - **v0.0.92:** "Go to deal" button on each dashboard card, opens the cheapest offer's shop page in a new tab (`components/product-card.blade.php`).
-- **v0.0.95:** avatars replaced by 50 own illustrated avatars with natural proportions (`scripts/generate-avatars.js`, `public/images/avatars`). A previously picked avatar falls back to initials.
+- **v0.0.95:** avatars replaced by 50 own illustrated avatars with natural proportions (`scripts/generate-avatars.js`, `public/images/avatars`). A previously picked avatar falls back to initials. Users can also upload their own picture (Account settings > Avatar > Own picture, stored on the public disk under `avatars/`; wins over the bundled choice). Bundled avatars may be svg, png, jpg or webp. Startup now also creates `storage/framework/cache` (missing dir broke Livewire uploads).
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---
