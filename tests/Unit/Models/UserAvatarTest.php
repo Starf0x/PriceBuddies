@@ -12,14 +12,14 @@ class UserAvatarTest extends TestCase
         $choices = User::avatarChoices();
 
         $this->assertGreaterThanOrEqual(100, count($choices));
-        $this->assertContains('lorelei-01.svg', $choices);
+        $this->assertContains('avataaars-01.svg', $choices);
     }
 
     public function test_picked_avatar_becomes_the_filament_avatar_url(): void
     {
-        $user = new User(['settings' => ['avatar' => 'notionists-05.svg']]);
+        $user = new User(['settings' => ['avatar' => 'adventurer-05.svg']]);
 
-        $this->assertSame(asset('images/avatars/notionists-05.svg'), $user->getFilamentAvatarUrl());
+        $this->assertSame(asset('images/avatars/adventurer-05.svg'), $user->getFilamentAvatarUrl());
     }
 
     public function test_no_or_unknown_avatar_falls_back_to_initials(): void
