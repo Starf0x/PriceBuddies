@@ -17,6 +17,20 @@ class SchemaOrgService
      */
     public static function parseSchemaOrg(Collection $collection, string $field): ?string
     {
+        // PriceBuddies: a JSON-LD block can be a list of nodes (e.g. paradigit.nl) or an
+        // object with @graph. Flatten both so the Product node is found.
+        $collection = $collection->flatMap(function ($item): array {
+            if (is_array($item) && array_is_list($item)) {
+                return $item;
+            }
+
+            if (is_array(data_get($item, '@graph'))) {
+                return [$item, ...data_get($item, '@graph')];
+            }
+
+            return [$item];
+        });
+
         // Match the Product node case-insensitively, and tolerate an array @type
         // (e.g. ["Product", "Thing"]). Some sites use a lowercase "product" type.
         $schema = $collection->first(function ($item): bool {

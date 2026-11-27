@@ -118,6 +118,25 @@ class SchemaOrgServiceTest extends TestCase
         $this->assertEquals('EUR', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'price_currency'));
     }
 
+    public function test_parse_schema_org_finds_product_in_list_and_graph()
+    {
+        // A JSON-LD block that is itself a list of nodes (paradigit.nl).
+        $jsonLd = [
+            [
+                ['@type' => 'BreadcrumbList', 'itemListElement' => []],
+                ['name' => 'Seagate IronWolf - 4 TB', 'offers' => ['price' => '209.00', 'priceCurrency' => 'EUR'], '@type' => 'Product'],
+            ],
+        ];
+        $this->assertEquals('Seagate IronWolf - 4 TB', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'title'));
+        $this->assertEquals('209.00', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'price'));
+
+        // An object with @graph.
+        $jsonLd = [
+            ['@context' => 'https://schema.org', '@graph' => [['@type' => 'WebPage'], ['@type' => 'Product', 'name' => 'Graph Product', 'offers' => ['price' => '12.50']]]],
+        ];
+        $this->assertEquals('12.50', SchemaOrgService::parseSchemaOrg(collect($jsonLd), 'price'));
+    }
+
     public function test_parse_schema_org_handles_image_array()
     {
         $jsonLd = [

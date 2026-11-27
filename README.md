@@ -28,6 +28,7 @@
 - **v0.0.74:** schema.org price is also read from `offers.priceSpecification[0].price` (list form, used by joybuy.nl), so auto-create picks a stable schema.org strategy.
 - **v0.0.77:** scheduled scrapes follow the container time zone (`app.schedule_timezone` from `SCHEDULE_TIMEZONE` / `TZ`), so the default `0 6 * * *` runs at 06:00 Amsterdam instead of 06:00 UTC.
 - **v0.0.80:** deal verdict "Not enough data yet" renamed to "No changes in the price" (shown while the price has never moved).
+- **v0.0.83:** schema.org parser also finds the Product node when a JSON-LD block is a list of nodes or uses `@graph` (paradigit.nl), so the correct incl. VAT price is used instead of a `.price` selector.
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---
