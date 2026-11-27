@@ -30,7 +30,7 @@
 - **v0.0.80:** deal verdict "Not enough data yet" renamed to "No changes in the price" (shown while the price has never moved).
 - **v0.0.83:** schema.org parser also finds the Product node when a JSON-LD block is a list of nodes or uses `@graph` (paradigit.nl), so the correct incl. VAT price is used instead of a `.price` selector.
 - **v0.0.86:** dark look from My Audiobook Collection: custom gray palette (bg #0e1014, panels #16191f/#1c2027), purple/cyan background glow, dark mode by default (`AdminPanelProvider`).
-- **v0.0.89:** transparent top bar in dark mode (`AdminPanelProvider::BACKGROUND_STYLE`).
+- **v0.0.89:** transparent top bar in dark mode; background glow hues turn 37° per day like My Audiobook Collection (`AdminPanelProvider::BACKGROUND_STYLE`).
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---

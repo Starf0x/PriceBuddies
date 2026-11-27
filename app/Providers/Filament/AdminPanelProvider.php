@@ -53,18 +53,34 @@ class AdminPanelProvider extends PanelProvider
         950 => '14, 16, 20',
     ];
 
-    /** Soft purple/cyan glow behind the page, as in My Audiobook Collection (dark mode only). */
+    /**
+     * Soft purple/cyan glow behind the page, as in My Audiobook Collection (dark mode only).
+     * Like there, both hues turn 37 degrees a day (--day, set by the script below, also at midnight).
+     */
     public const string BACKGROUND_STYLE = '<style>
         .dark .fi-body {
             background:
-                radial-gradient(1500px 1100px at 4% 0%, hsl(252 100% 68% / .34), transparent 68%),
-                radial-gradient(1400px 1050px at 96% 96%, hsl(188 86% 53% / .30), transparent 66%),
+                radial-gradient(1500px 1100px at 4% 0%, hsl(calc(252 + var(--day, 0)) 100% 68% / .34), transparent 68%),
+                radial-gradient(1400px 1050px at 96% 96%, hsl(calc(188 + var(--day, 0)) 86% 53% / .30), transparent 66%),
                 #0e1014;
             background-attachment: fixed;
         }
         .dark .fi-topbar > nav { background: transparent; box-shadow: none; --tw-ring-color: transparent; }
         .dark .fi-sidebar, .dark .fi-sidebar-header { background: transparent; }
-    </style>';
+    </style>
+    <script>
+        (function () {
+            var paint = function () {
+                var now = new Date();
+                var day = (Math.floor((now.getTime() - now.getTimezoneOffset() * 60000) / 86400000) * 37) % 360;
+                document.documentElement.style.setProperty("--day", String(day));
+                var midnight = new Date();
+                midnight.setHours(24, 0, 5, 0);
+                setTimeout(paint, Math.max(1000, midnight.getTime() - Date.now()));
+            };
+            paint();
+        })();
+    </script>';
 
     public const array DEFAULT_PAGINATION = [25, 50, 100, 'all'];
 
