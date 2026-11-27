@@ -71,7 +71,7 @@ class ProductInsightsTabTest extends TestCase
 
         $this->get(ProductResource::getUrl('view', ['record' => $product]))
             ->assertOk()
-            ->assertSee('Not enough data yet')
+            ->assertSee('No changes in the price')
             ->assertSee('rgba(var(--gray-500),.08)', escape: false)
             ->assertDontSee('rgba(var(--primary-500),.08)', escape: false);
     }

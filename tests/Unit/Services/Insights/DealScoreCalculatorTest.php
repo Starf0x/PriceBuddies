@@ -41,7 +41,7 @@ class DealScoreCalculatorTest extends TestCase
         $result = (new DealScoreCalculator)->calculate(0.0, 39.0, 39.0, 1, false, false);
 
         $this->assertSame('unknown', $result->verdictKey);
-        $this->assertSame('Not enough data yet', $result->verdict);
+        $this->assertSame('No changes in the price', $result->verdict);
         $this->assertSame(0.0, $result->score);
         $this->assertFalse($result->isAllTimeLow);
         $this->assertTrue($result->lowConfidence);

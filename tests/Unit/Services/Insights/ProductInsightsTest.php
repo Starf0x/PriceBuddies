@@ -56,7 +56,7 @@ class ProductInsightsTest extends TestCase
         $insights = ProductInsights::for($product);
 
         $this->assertSame('unknown', $insights->dealScore->verdictKey);
-        $this->assertSame('Not enough data yet', $insights->dealScore->verdict);
+        $this->assertSame('No changes in the price', $insights->dealScore->verdict);
         $this->assertSame(0.0, $insights->dealScore->score);
         $this->assertFalse($insights->dealScore->isAllTimeLow);
     }

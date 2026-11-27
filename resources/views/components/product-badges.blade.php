@@ -11,7 +11,7 @@
         'wait' => 'danger',
         default => 'gray',
     };
-    // "Not enough data yet" already says it has no history; the generic low-confidence
+    // "No changes in the price" already says it has no history; the generic low-confidence
     // hover would just repeat itself.
     $verdictHover = $verdictKey === 'unknown'
         ? __('The price has not moved yet, so there is nothing to compare it against')

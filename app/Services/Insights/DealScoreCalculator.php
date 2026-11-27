@@ -31,7 +31,7 @@ class DealScoreCalculator
         'average' => 'About average',
         'pricey' => 'A bit pricey',
         'wait' => "Wait — it's expensive right now",
-        'unknown' => 'Not enough data yet',
+        'unknown' => 'No changes in the price',
     ];
 
     /**
