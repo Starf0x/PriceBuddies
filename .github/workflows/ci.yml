@@ -86,6 +86,10 @@ jobs:
           platforms: linux/amd64
           file: ./docker/php.dockerfile
           push: true
+          # Plain single-platform manifest: with provenance/SBOM attestations the image is an
+          # OCI index whose digest Unraid never matches, so it keeps showing "update available".
+          provenance: false
+          sbom: false
           tags: |
             ghcr.io/starf0x/pricebuddies:${{ github.ref_name }}
             ghcr.io/starf0x/pricebuddies:latest
