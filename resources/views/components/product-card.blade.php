@@ -6,6 +6,10 @@
     /** @var \App\Dto\PriceCacheDto $latestPrice */
     $latestPrice = $product->getPriceCache()->first();
 
+    // PriceBuddies: link for the "Go to deal" button. The price cache only has a URL once a
+    // price was scraped with it, so fall back to the product's first shop link.
+    $dealUrl = $latestPrice?->getUrl() ?: $product->urls->first()?->buy_url;
+
 @endphp
 <div
     style="{{ Filament\Support\get_color_css_variables(Trend::getColor($product->trend), shades: [300, 500, 400, 600, 800]) }}"
@@ -66,14 +70,14 @@
             </a>
 
             {{-- PriceBuddies: open the (cheapest) offer itself in a new tab. --}}
-            @if ($latestPrice?->getUrl())
+            @if ($dealUrl)
                 <a
-                    href="{{ $latestPrice->getUrl() }}"
+                    href="{{ $dealUrl }}"
                     target="_blank"
                     rel="noopener noreferrer"
                     style="position: absolute; bottom: calc(40px + .5rem); right: .5rem"
                     class="pb-card-shop-link inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-400/10 ring-1 ring-primary-600/20 dark:ring-primary-400/30 hover:bg-primary-100 dark:hover:bg-primary-400/20"
-                    title="{{ __('Open the offer at :store', ['store' => $latestPrice->getStoreName()]) }}"
+                    title="{{ __('Open the offer in a new tab') }}"
                 >
                     <x-filament::icon icon="heroicon-m-arrow-top-right-on-square" class="h-4 w-4" />
                     {{ __('Go to deal') }}
