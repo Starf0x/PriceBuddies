@@ -118,7 +118,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         $files = glob(public_path(self::AVATAR_PATH.'/*.svg')) ?: [];
 
-        return array_values(array_map('basename', $files));
+        return array_map('basename', $files);
     }
 
     /**
