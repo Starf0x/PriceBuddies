@@ -26,6 +26,7 @@
 - **v0.0.68:** faster start on Unraid: compiled Blade views go to `/app/bootstrap/cache/views` inside the container (`VIEW_COMPILED_PATH`) instead of the appdata share (slow FUSE writes, ~23s), and duplicate cache commands after `optimize` were removed (`docker/php/start-app.sh`).
 - **v0.0.71:** fix for SQLite: store lookup by domain (`Store::scopeDomainFilter`) always returned nothing, because SQLite `whereJsonContains` only matches scalars. So no product URL could be added, and every attempt created a new store. It now uses `json_tree` on SQLite.
 - **v0.0.74:** schema.org price is also read from `offers.priceSpecification[0].price` (list form, used by joybuy.nl), so auto-create picks a stable schema.org strategy.
+- **v0.0.77:** scheduled scrapes follow the container time zone (`app.schedule_timezone` from `SCHEDULE_TIMEZONE` / `TZ`), so the default `0 6 * * *` runs at 06:00 Amsterdam instead of 06:00 UTC.
 - **Next:** Dutch store presets (bol.com, Coolblue…); confirm joybuy.nl works via the scraper on Unraid (cloud sandbox cannot reach joybuy.nl).
 
 ---
