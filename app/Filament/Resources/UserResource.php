@@ -89,6 +89,7 @@ class UserResource extends Resource
                             ->required()
                             ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
                     ]),
+                self::getAvatarSection(),
                 self::makeFormHeading('Notification Settings'),
                 self::getEmailSettings(),
                 self::getPushoverSettings(),
@@ -140,6 +141,31 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * PriceBuddies: pick a profile picture from the bundled avatars (public/images/avatars).
+     */
+    protected static function getAvatarSection(): Section
+    {
+        $options = ['' => new HtmlString('<span class="pb-avatar-none">'.e(__('Initials')).'</span>')];
+
+        foreach (User::avatarChoices() as $file) {
+            $options[$file] = new HtmlString('<img class="pb-avatar" src="'.e(asset(User::AVATAR_PATH.'/'.$file)).'" alt="" loading="lazy">');
+        }
+
+        return Section::make(__('Avatar'))
+            ->description(__('Choose a picture for your profile.'))
+            ->collapsible()
+            ->schema([
+                Forms\Components\Radio::make('settings.avatar')
+                    ->hiddenLabel()
+                    ->options($options)
+                    ->default('')
+                    ->inline()
+                    ->inlineLabel(false)
+                    ->extraAttributes(['class' => 'pb-avatar-picker']),
+            ]);
     }
 
     protected static function getEmailSettings(): Section

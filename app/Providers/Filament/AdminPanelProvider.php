@@ -65,8 +65,11 @@ class AdminPanelProvider extends PanelProvider
                 #0e1014;
             background-attachment: fixed;
         }
-        .dark .fi-topbar > nav { background: transparent; box-shadow: none; --tw-ring-color: transparent; }
+        .dark .fi-topbar > nav { background: transparent; box-shadow: none; --tw-ring-color: transparent; backdrop-filter: blur(14px); }
         .dark .fi-sidebar, .dark .fi-sidebar-header { background: transparent; }
+        .pb-avatar { width: 56px; height: 56px; border-radius: 9999px; display: block; }
+        .pb-avatar-none { display: inline-flex; align-items: center; height: 56px; }
+        .pb-avatar-picker label:has(input:checked) .pb-avatar { outline: 3px solid rgb(var(--primary-500)); outline-offset: 2px; }
     </style>
     <script>
         (function () {
