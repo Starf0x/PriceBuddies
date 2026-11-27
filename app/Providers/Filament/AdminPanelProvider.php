@@ -10,6 +10,7 @@ use App\Filament\Resources\ApiKeyResource;
 use App\Filament\Resources\LogMessageResource;
 use App\Filament\Resources\NotificationHistoryResource;
 use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,6 +20,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\MaxWidth;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,6 +33,38 @@ use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 class AdminPanelProvider extends PanelProvider
 {
     public const array PRIMARY_COLOR = Color::Teal;
+
+    /**
+     * PriceBuddies: greys taken from My Audiobook Collection
+     * (950 = --bg #0e1014, 900 = --panel #16191f, 800 = --panel2 #1c2027,
+     * 700 = --line #262b34, 400 = --dim #a2a9b8).
+     */
+    public const array GRAY_COLOR = [
+        50 => '248, 249, 251',
+        100 => '238, 240, 243',
+        200 => '226, 229, 234',
+        300 => '200, 205, 214',
+        400 => '162, 169, 184',
+        500 => '120, 128, 142',
+        600 => '75, 82, 96',
+        700 => '38, 43, 52',
+        800 => '28, 32, 39',
+        900 => '22, 25, 31',
+        950 => '14, 16, 20',
+    ];
+
+    /** Soft purple/cyan glow behind the page, as in My Audiobook Collection (dark mode only). */
+    public const string BACKGROUND_STYLE = '<style>
+        .dark .fi-body {
+            background:
+                radial-gradient(1500px 1100px at 4% 0%, hsl(252 100% 68% / .34), transparent 68%),
+                radial-gradient(1400px 1050px at 96% 96%, hsl(188 86% 53% / .30), transparent 66%),
+                #0e1014;
+            background-attachment: fixed;
+        }
+        .dark .fi-topbar > nav { background: linear-gradient(90deg, #171a21, #12141a); }
+        .dark .fi-sidebar, .dark .fi-sidebar-header { background: transparent; }
+    </style>';
 
     public const array DEFAULT_PAGINATION = [25, 50, 100, 'all'];
 
@@ -46,7 +80,11 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->colors([
                 'primary' => self::PRIMARY_COLOR,
+                'gray' => self::GRAY_COLOR,
             ])
+            // PriceBuddies: dark look shared with My Audiobook Collection.
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => self::BACKGROUND_STYLE)
             ->navigationItems([
                 NavigationItem::make('Help')
                     ->group('System')
