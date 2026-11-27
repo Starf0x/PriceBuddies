@@ -6,6 +6,7 @@ use App\Enums\NotificationMethods;
 use App\Enums\Role;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Filament\Panel\Concerns\HasNotifications;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property array $settings
  * @property \App\Enums\Role $role
  */
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasNotifications, Notifiable;
@@ -103,6 +104,35 @@ class User extends Authenticatable implements FilamentUser
     public function isAdmin(): bool
     {
         return $this->role === Role::Admin;
+    }
+
+    /** PriceBuddies: folder (under public/) holding the avatars a user can pick. */
+    public const string AVATAR_PATH = 'images/avatars';
+
+    /**
+     * Avatar file names a user can pick, e.g. "lorelei-01.svg".
+     *
+     * @return list<string>
+     */
+    public static function avatarChoices(): array
+    {
+        $files = glob(public_path(self::AVATAR_PATH.'/*.svg')) ?: [];
+
+        return array_map('basename', $files);
+    }
+
+    /**
+     * The picked avatar, or null for Filament's default (initials).
+     */
+    public function getFilamentAvatarUrl(): ?string
+    {
+        $avatar = data_get($this->settings, 'avatar');
+
+        if (! is_string($avatar) || ! in_array($avatar, self::avatarChoices(), true)) {
+            return null;
+        }
+
+        return asset(self::AVATAR_PATH.'/'.$avatar);
     }
 
     /**
